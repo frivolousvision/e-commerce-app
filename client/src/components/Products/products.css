@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
+.top {
+  margin-top: 8vh;
+}
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  font-family: "Open Sans", sans-serif;
+  margin: 2vh auto;
+}
+.product-list img {
+  max-width: 100%;
+  min-width: 20vh;
+  max-height: 50vh;
+}
+
+.product-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 7vh;
+  margin-right: 7vh;
+}
+.product-box a {
+  text-decoration: none;
+  color: black;
+  text-align: center;
+}
+
+.buttons {
+  display: inline-flex;
+}
