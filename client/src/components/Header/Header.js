@@ -1,22 +1,25 @@
 import React from "react";
 import "./header.css";
 import { Link } from "react-router-dom";
+import store from "../../store/store";
 
 const Header = (props) => {
+  const state = store.getState();
+  console.log(state);
   return (
     <div className='header'>
       <li className='header-list'>
         <Link to='/iphone'>
-          <ul onClick={props.getIphones}>iPhone</ul>
+          <ul>iPhone</ul>
         </Link>
         <Link to='/ipad'>
-          <ul onClick={props.getIpads}>iPad</ul>
+          <ul>iPad</ul>
         </Link>
         <Link to='/mac'>
-          <ul onClick={props.getMacs}>MacBook</ul>
+          <ul>MacBook</ul>
         </Link>
         <Link to='/cart'>
-          <ul onClick={props.getCart}>Cart ({props.cartCount})</ul>
+          <ul onClick={props.getCart}>Cart ({state.cartCount})</ul>
         </Link>
       </li>
     </div>

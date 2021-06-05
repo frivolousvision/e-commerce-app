@@ -1,71 +1,63 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+//Features
+import { setCartCount, selectCartCount } from "./features/cartCountSlice";
 
 //Components
 import Header from "./components/Header/Header";
 import Products from "./components/Products/Products";
+import Iphone from "./components/Products/Iphone";
+import Ipad from "./components/Products/Ipad";
+import Mac from "./components/Products/Mac";
 import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 
 function App() {
+  const dispatch = useDispatch();
   const [items, setItems] = useState("");
-  const [cart, setCart] = useState("");
-  const [cartCount, setCartCount] = useState("");
+  const cartCount = useSelector(selectCartCount);
 
+  // Load All posducts from database
   const allProducts = async () => {
-    const response = await fetch("http://localhost:5000/products");
-    const jsonProducts = await response.json();
-    setItems(jsonProducts);
-    //console.log(jsonProducts);
+    try {
+      const response = await fetch("http://localhost:5000/products");
+      const jsonProducts = await response.json();
+      setItems(jsonProducts);
+    } catch (err) {
+      console.log(err.messsage);
+    }
   };
-  const getIphones = async () => {
-    const response = await fetch("http://localhost:5000/iphone");
-    const jsonProducts = await response.json();
-    setItems(jsonProducts);
-    //console.log(jsonProducts);
-  };
-  const getIpads = async () => {
-    const response = await fetch("http://localhost:5000/ipad");
-    const jsonProducts = await response.json();
-    setItems(jsonProducts);
-    //console.log(jsonProducts);
-  };
-  const getMacs = async () => {
-    const response = await fetch("http://localhost:5000/mac");
-    const jsonProducts = await response.json();
-    setItems(jsonProducts);
-    //console.log(jsonProducts);
-  };
-  const getCart = async () => {
-    console.log("I was clicked");
-    const response = await fetch("http://localhost:5000/cart");
-    const jsonProducts = await response.json();
 
-    setCart(jsonProducts.filter((product) => product.in_cart === true));
-  };
   const getCartCount = async () => {
-    const response = await fetch("http://localhost:5000/count");
-    const jsonResponse = await response.json();
-    console.log(jsonResponse[0].count);
-
-    setCartCount(jsonResponse[0].count);
+    try {
+      const response = await fetch("http://localhost:5000/count");
+      const jsonResponse = await response.json();
+      dispatch(setCartCount(jsonResponse[0].count));
+    } catch (err) {
+      console.log(err.message);
+    }
   };
+  // const handlePageLoad = async () => {
+  //   allProducts();
+  //   getCartCount();
+  // };
+  // Render all products on page load// Updates cart count and total cost
   useEffect(() => {
-    allProducts();
+    const handlePageLoad = async () => {
+      allProducts();
+      getCartCount();
+    };
+    handlePageLoad();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useEffect(() => {
-    getCartCount();
-  });
 
   return (
     <Fragment>
       <Router>
         <Header
-          getIphones={getIphones}
-          getIpads={getIpads}
-          getMacs={getMacs}
-          getCart={getCart}
           cartCount={cartCount}
+          //cart={cart}
         />
 
         <Switch>
@@ -73,19 +65,11 @@ function App() {
           <Route
             path='/iphone'
             exact
-            component={() => <Products items={items} />}
+            component={() => <Iphone items={items} />}
           />
-          <Route
-            path='/ipad'
-            exact
-            component={() => <Products items={items} />}
-          />
-          <Route
-            path='/mac'
-            exact
-            component={() => <Products items={items} />}
-          />
-          <Route path='/cart' exact component={() => <Cart cart={cart} />} />
+          <Route path='/ipad' exact component={() => <Ipad items={items} />} />
+          <Route path='/mac' exact component={() => <Mac items={items} />} />
+          <Route path='/cart' exact component={() => <Cart />} />
           <Route
             path='/:id'
             exact

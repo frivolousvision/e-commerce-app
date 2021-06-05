@@ -23,6 +23,16 @@ app.get("/cart", async (req, res) => {
     console.error(err.message);
   }
 });
+app.get("/carttotal", async (req, res) => {
+  try {
+    const products = await pool.query(
+      "SELECT SUM(price) FROM products WHERE in_cart = 'true'"
+    );
+    res.json(products.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 //COUNT CART ITEMS
 app.get("/count", async (req, res) => {
   try {
@@ -89,7 +99,7 @@ app.get("/:id", async (req, res) => {
   }
 });
 
-//POST ROUTES//
+//PUT ROUTES//
 app.put("/addtocart/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -112,7 +122,8 @@ app.put("/removefromcart/:id", async (req, res) => {
       "UPDATE products SET in_cart = 'false' WHERE product_id = $1",
       [id]
     );
-    res.json("Removed from cart");
+    res.status(200);
+    console.log("Removed from cart");
   } catch (error) {}
 });
 
