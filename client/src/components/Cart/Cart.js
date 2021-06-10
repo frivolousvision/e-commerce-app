@@ -1,69 +1,53 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCartCount, setCartCount } from "../../features/cartCountSlice";
+import { useDispatch } from "react-redux";
+import { setCartCount } from "../../features/cartCountSlice";
 import "../Products/products.css";
 
 const Cart = (props) => {
   const [cart, setCart] = useState(0);
   const [total, setTotal] = useState();
   const dispatch = useDispatch();
-  const cartCount = useSelector(selectCartCount);
 
   useEffect(() => {
-    const handlePageLoad = async () => {
-      getCart();
-      getCartTotal();
-      getCartCount();
-    };
-    handlePageLoad();
-  }, []);
-
-  const getCart = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/cart");
-      const jsonProducts = await response.json();
-      setCart(jsonProducts);
-    } catch (err) {
-      console.log(err.message);
+    let mounted = true;
+    getCart().then((res) => {
+      if (mounted) {
+        setCart(res);
+      }
+    });
+    getCartTotal().then((res) => {
+      if (mounted) {
+        setTotal(res[0].sum);
+      }
+    });
+    props.getCartCount();
+    if (mounted) {
+      props.getCartCount();
+      // dispatch(setCartCount(res[0].count));
     }
+    return () => (mounted = false);
+  }, [cart]);
+
+  const getCart = () => {
+    return fetch("http://localhost:5000/cart").then((res) => res.json());
   };
+
   //Sets "in_cart" in DB to false, filers displayed results
-  const removeFromCart = async (id) => {
-    try {
-      fetch(`http://localhost:5000/removefromcart/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-      });
+  const removeFromCart = (id) => {
+    setCart(cart.filter((item) => item.product_id !== id));
+    return fetch(`http://localhost:5000/removefromcart/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+    });
+  };
 
-      setCart(cart.filter((item) => item.product_id !== id));
-    } catch (err) {
-      console.log(err.message);
-    }
+  const getCartTotal = () => {
+    return fetch(`http://localhost:5000/carttotal`).then((res) => res.json());
   };
-  //Gets total cart dollar amount
-  const getCartTotal = async () => {
-    try {
-      const response = await fetch(`http://localhost:5000/carttotal`);
-      const jsonResponse = await response.json();
-      setTotal(jsonResponse[0].sum);
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  //Gets number of items in cart, uses Redux to set state
-  const getCartCount = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/count");
-      const jsonResponse = await response.json();
-      dispatch(setCartCount(jsonResponse[0].count));
-      return cartCount;
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  const handleRemoveFromCart = async (id) => removeFromCart(id);
-  getCartCount();
-  getCartTotal();
+
+  // const getCartCount = () => {
+  //   return fetch("http://localhost:5000/count").then((res) => res.json());
+  // };
 
   return (
     <Fragment>
@@ -77,7 +61,7 @@ const Cart = (props) => {
               <h2>{product.name}</h2>
               <h2>${product.price}</h2>
 
-              <button onClick={() => handleRemoveFromCart(product.product_id)}>
+              <button onClick={() => removeFromCart(product.product_id)}>
                 Remove from cart
               </button>
             </div>

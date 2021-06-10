@@ -1,16 +1,30 @@
-import React, { Fragment } from "react";
-// import { Link } from "react-router-dom";
+import React, { Fragment, useState, useEffect } from "react";
 
 import "./products.css";
 import Product from "../Product/Product";
 
 const Products = (props) => {
+  const [items, setItems] = useState("");
+  useEffect(() => {
+    let mounted = true;
+    allProducts().then((res) => {
+      if (mounted) {
+        setItems(res);
+      }
+    });
+    return () => (mounted = false);
+  }, []);
+
+  const allProducts = () => {
+    return fetch("http://localhost:5000/products").then((res) => res.json());
+  };
+
   return (
     <Fragment>
       <div className='top'></div>
       <div className='product-list'>
-        {props.items ? (
-          props.items.map((product, index) => (
+        {items ? (
+          items.map((product, index) => (
             <Product
               product={product}
               key={index}

@@ -6,25 +6,22 @@ import { useDispatch } from "react-redux";
 const Product = (props) => {
   const dispatch = useDispatch();
 
-  const getCartCount = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/count");
-      const jsonResponse = await response.json();
-      console.log(jsonResponse[0].count);
-      dispatch(setCartCount(jsonResponse[0].count));
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  const addToCart = async (id) => {
+  const addToCart = (id) => {
+    console.log("add to cart clicked");
     fetch(`http://localhost:5000/addtocart/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-    });
-  };
-  const handleAddToCart = async (id) => {
-    addToCart(id);
-    getCartCount();
+    })
+      .then(
+        props.getCartCount()
+        // fetch("http://localhost:5000/count").then((response) => {
+        //   response.json().then((res) => {
+        //     dispatch(setCartCount(res[0].count));
+        //     console.log("dispatch!");
+        //   });
+        // })
+      )
+      .catch((err) => console.log(err));
   };
 
   //   const removeFromCart = async (id) => {
@@ -47,7 +44,7 @@ const Product = (props) => {
       <h3 className='description'>{props.product.description}</h3>
       <h2 className='price'>${props.product.price}</h2>
       <div className='buttons'>
-        <button onClick={() => handleAddToCart(props.product.product_id)}>
+        <button onClick={() => addToCart(props.product.product_id)}>
           Add to cart
         </button>
         {/* {button || props.product.in_cart ? (

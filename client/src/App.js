@@ -14,66 +14,63 @@ import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 
 function App() {
+  const [cartCount, setCartCount] = useState(0);
   const dispatch = useDispatch();
-  const [items, setItems] = useState("");
-  const cartCount = useSelector(selectCartCount);
+  // const [items, setItems] = useState("");
 
-  // Load All posducts from database
-  const allProducts = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/products");
-      const jsonProducts = await response.json();
-      setItems(jsonProducts);
-    } catch (err) {
-      console.log(err.messsage);
-    }
+  // const cartCount = useSelector(selectCartCount);
+  const getCartCount = () => {
+    console.log("header fetch called");
+    return fetch("http://localhost:5000/count")
+      .then((res) => res.json())
+      .then((res) => setCartCount(res[0].count));
   };
 
-  const getCartCount = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/count");
-      const jsonResponse = await response.json();
-      dispatch(setCartCount(jsonResponse[0].count));
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-  // const handlePageLoad = async () => {
-  //   allProducts();
-  //   getCartCount();
-  // };
-  // Render all products on page load// Updates cart count and total cost
+  // console.log(state);
   useEffect(() => {
-    const handlePageLoad = async () => {
-      allProducts();
+    let mounted = true;
+    // getCartCount().then((res) => {
+    if (mounted) {
       getCartCount();
-    };
-    handlePageLoad();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    }
+    return () => (mounted = false);
+  }, [cartCount]);
 
   return (
     <Fragment>
       <Router>
-        <Header
-          cartCount={cartCount}
-          //cart={cart}
-        />
+        <Header cartCount={cartCount} />
 
         <Switch>
-          <Route path='/' exact component={() => <Products items={items} />} />
+          <Route
+            path='/'
+            exact
+            component={() => <Products getCartCount={getCartCount} />}
+          />
           <Route
             path='/iphone'
             exact
-            component={() => <Iphone items={items} />}
+            component={() => <Iphone getCartCount={getCartCount} />}
           />
-          <Route path='/ipad' exact component={() => <Ipad items={items} />} />
-          <Route path='/mac' exact component={() => <Mac items={items} />} />
-          <Route path='/cart' exact component={() => <Cart />} />
+          <Route
+            path='/ipad'
+            exact
+            component={() => <Ipad getCartCount={getCartCount} />}
+          />
+          <Route
+            path='/mac'
+            exact
+            component={() => <Mac getCartCount={getCartCount} />}
+          />
+          <Route
+            path='/cart'
+            exact
+            component={() => <Cart getCartCount={getCartCount} />}
+          />
           <Route
             path='/:id'
             exact
-            component={(props) => <ProductInfo items={items} {...props} />}
+            component={(props) => <ProductInfo {...props} />}
           />
         </Switch>
       </Router>

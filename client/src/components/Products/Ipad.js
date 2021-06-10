@@ -4,19 +4,20 @@ import Product from "../Product/Product";
 import "./products.css";
 
 const Ipad = (props) => {
-  const [items, setItems] = useState(props.items);
+  const [items, setItems] = useState("");
   useEffect(() => {
-    const getIphones = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/ipad");
-        const jsonProducts = await response.json();
-        setItems(jsonProducts);
-      } catch (err) {
-        console.log(err.messsage);
+    let mounted = true;
+    getIpads().then((res) => {
+      if (mounted) {
+        setItems(res);
       }
-    };
-    getIphones();
+    });
+    return () => (mounted = false);
   }, []);
+  const getIpads = async () => {
+    return fetch("http://localhost:5000/ipad").then((res) => res.json());
+  };
+
   return (
     <Fragment>
       <div className='top'></div>

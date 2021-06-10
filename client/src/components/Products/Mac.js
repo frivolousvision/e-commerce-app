@@ -1,23 +1,25 @@
 import React, { Fragment, useEffect, useState } from "react";
+
 import Product from "../Product/Product";
 // import { Link } from "react-router-dom";
 
 import "./products.css";
 
 const Mac = (props) => {
-  const [items, setItems] = useState(props.items);
+  const [items, setItems] = useState("");
+
   useEffect(() => {
-    const getIphones = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/mac");
-        const jsonProducts = await response.json();
-        setItems(jsonProducts);
-      } catch (err) {
-        console.log(err.messsage);
+    let mounted = true;
+    getMacs().then((res) => {
+      if (mounted) {
+        setItems(res);
       }
-    };
-    getIphones();
+    });
+    return () => (mounted = false);
   }, []);
+  const getMacs = () => {
+    return fetch("http://localhost:5000/mac").then((res) => res.json());
+  };
 
   return (
     <Fragment>
@@ -25,7 +27,11 @@ const Mac = (props) => {
       <div className='product-list'>
         {items ? (
           items.map((product, index) => (
-            <Product product={product} key={index} />
+            <Product
+              product={product}
+              key={index}
+              getCartCount={props.getCartCount}
+            />
           ))
         ) : (
           <p>Nothing was set</p>

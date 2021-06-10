@@ -37,7 +37,7 @@ app.get("/carttotal", async (req, res) => {
 app.get("/count", async (req, res) => {
   try {
     const count = await pool.query(
-      "SELECT COUNT(product_id) FROM products WHERE in_cart = 'true'"
+      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
     );
     res.json(count.rows);
   } catch (err) {
@@ -108,6 +108,7 @@ app.put("/addtocart/:id", async (req, res) => {
       [id]
     );
     res.status(200);
+    res.send("Rows updated");
     console.log("Added to cart");
   } catch (err) {
     console.error(err.message);
@@ -123,6 +124,7 @@ app.put("/removefromcart/:id", async (req, res) => {
       [id]
     );
     res.status(200);
+    res.json(getProduct.rows);
     console.log("Removed from cart");
   } catch (error) {}
 });

@@ -5,25 +5,25 @@ import Product from "../Product/Product";
 import "./products.css";
 
 const Iphone = (props) => {
-  const [iphones, setIphones] = useState([]);
+  const [items, setItems] = useState([]);
   useEffect(() => {
-    const getIphones = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/iphone");
-        const jsonProducts = await response.json();
-        setIphones(jsonProducts);
-      } catch (err) {
-        console.log(err.messsage);
+    let mounted = true;
+    getIphones().then((res) => {
+      if (mounted) {
+        setItems(res);
       }
-    };
-    getIphones();
-  }, [iphones]);
+    });
+    return () => (mounted = false);
+  }, []);
+  const getIphones = () => {
+    return fetch("http://localhost:5000/iphone").then((res) => res.json());
+  };
   return (
     <Fragment>
       <div className='top'></div>
       <div className='product-list'>
-        {iphones ? (
-          iphones.map((product, index) => (
+        {items ? (
+          items.map((product, index) => (
             <Product
               product={product}
               key={index}
