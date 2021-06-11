@@ -20,13 +20,8 @@ const Cart = (props) => {
         setTotal(res[0].sum);
       }
     });
-    props.getCartCount();
-    if (mounted) {
-      props.getCartCount();
-      // dispatch(setCartCount(res[0].count));
-    }
     return () => (mounted = false);
-  }, [cart]);
+  }, []);
 
   const getCart = () => {
     return fetch("http://localhost:5000/cart").then((res) => res.json());
@@ -35,19 +30,26 @@ const Cart = (props) => {
   //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     setCart(cart.filter((item) => item.product_id !== id));
-    return fetch(`http://localhost:5000/removefromcart/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-    });
+    fetch(
+      `http://localhost:5000/removefromcart/${id}`
+      //  {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      // }
+    )
+      .then((res) => console.log(res))
+      // .then(getCart().then((res) => setCart(res)))
+      .then(
+        getCartTotal()
+          .then((res) => setTotal(res[0].sum))
+          .then(console.log(total))
+          .then(props.getCartCount())
+      );
   };
 
   const getCartTotal = () => {
     return fetch(`http://localhost:5000/carttotal`).then((res) => res.json());
   };
-
-  // const getCartCount = () => {
-  //   return fetch("http://localhost:5000/count").then((res) => res.json());
-  // };
 
   return (
     <Fragment>

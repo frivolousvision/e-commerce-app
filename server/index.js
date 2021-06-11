@@ -99,34 +99,33 @@ app.get("/:id", async (req, res) => {
   }
 });
 
-//PUT ROUTES//
-app.put("/addtocart/:id", async (req, res) => {
+//PUT ROUTES// Why aren't these puts!??
+app.get("/addtocart/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const addToCart = await pool.query(
       "UPDATE products SET in_cart = 'true' WHERE product_id = $1",
       [id]
     );
-    res.status(200);
-    res.send("Rows updated");
+    res.send();
     console.log("Added to cart");
   } catch (err) {
     console.error(err.message);
   }
 });
 
-//DELETE ROUTES//
-app.put("/removefromcart/:id", async (req, res) => {
+app.get("/removefromcart/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const removeFromCart = await pool.query(
       "UPDATE products SET in_cart = 'false' WHERE product_id = $1",
       [id]
     );
-    res.status(200);
-    res.json(getProduct.rows);
+    res.send();
     console.log("Removed from cart");
-  } catch (error) {}
+  } catch (err) {
+    console.log(err.message);
+  }
 });
 
 app.listen(port, console.log(`Server is running on ${port}`));

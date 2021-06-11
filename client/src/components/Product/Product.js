@@ -8,20 +8,15 @@ const Product = (props) => {
 
   const addToCart = (id) => {
     console.log("add to cart clicked");
-    fetch(`http://localhost:5000/addtocart/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then(
-        props.getCartCount()
-        // fetch("http://localhost:5000/count").then((response) => {
-        //   response.json().then((res) => {
-        //     dispatch(setCartCount(res[0].count));
-        //     console.log("dispatch!");
-        //   });
-        // })
-      )
-      .catch((err) => console.log(err));
+    fetch(
+      `http://localhost:5000/addtocart/${id}`
+      // , {
+      //   method: "PUT",
+      //   headers: { "Content-Type": "application/json" },
+      // }
+    )
+      .then((res) => console.log(res))
+      .then(props.getCartCount());
   };
 
   //   const removeFromCart = async (id) => {
