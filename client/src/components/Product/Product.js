@@ -4,10 +4,10 @@ import { setCartCount } from "../../features/cartCountSlice";
 import { useDispatch } from "react-redux";
 
 const Product = (props) => {
+  //Redux Variable
   const dispatch = useDispatch();
-
+  //Set "in_cart" to true in db, updates item count in cart
   const addToCart = (id) => {
-    console.log("add to cart clicked");
     fetch(`http://localhost:5000/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));

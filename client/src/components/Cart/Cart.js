@@ -33,11 +33,7 @@ const Cart = (props) => {
     fetch(`http://localhost:5000/removefromcart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)))
-      .then(
-        getCartTotal()
-          .then((res) => setTotal(res[0].sum))
-          .then(props.getCartCount())
-      );
+      .then(getCartTotal().then((res) => setTotal(res[0].sum)));
   };
   //Get total cost of cart
   const getCartTotal = () => {

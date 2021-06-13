@@ -1,12 +1,29 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setCartCount, selectCartCount } from "../../features/cartCountSlice";
+import { selectCartCount, setCartCount } from "../../features/cartCountSlice";
 import "./header.css";
 import { Link } from "react-router-dom";
-import store from "../../store/store";
 
 const Header = (props) => {
-  const state = store.getState();
+  //Redux Variables
+  const dispatch = useDispatch();
+  const cartCount = useSelector(selectCartCount);
+
+  //Fetches total items in cart
+  const loadCart = () => {
+    return fetch("http://localhost:5000/count").then((res) => res.json());
+  };
+
+  //Renders total items in cart
+  useEffect(() => {
+    let mounted = true;
+    loadCart().then((res) => {
+      if (mounted) {
+        dispatch(setCartCount(res[0].count));
+      }
+    });
+    return () => (mounted = false);
+  }, [dispatch]);
 
   return (
     <div className='header'>
@@ -21,7 +38,7 @@ const Header = (props) => {
           <ul>MacBook</ul>
         </Link>
         <Link to='/cart'>
-          <ul>Cart ({state.cartCount})</ul>
+          <ul>Cart ({cartCount})</ul>
         </Link>
       </li>
     </div>
