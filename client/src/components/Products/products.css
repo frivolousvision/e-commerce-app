@@ -37,6 +37,7 @@
 button {
   width: 10vw;
   height: 5vh;
+  border-radius: 10px;
 }
 .buttons {
   display: inline-flex;

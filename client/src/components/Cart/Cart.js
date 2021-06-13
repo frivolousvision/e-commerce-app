@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
 import "../Products/products.css";
+import "./cart.css";
 
 const Cart = (props) => {
   const [cart, setCart] = useState(0);
@@ -30,15 +31,8 @@ const Cart = (props) => {
   //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     setCart(cart.filter((item) => item.product_id !== id));
-    fetch(
-      `http://localhost:5000/removefromcart/${id}`
-      //  {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      // }
-    )
+    fetch(`http://localhost:5000/removefromcart/${id}`)
       .then((res) => console.log(res))
-      // .then(getCart().then((res) => setCart(res)))
       .then(
         getCartTotal()
           .then((res) => setTotal(res[0].sum))
@@ -46,7 +40,7 @@ const Cart = (props) => {
           .then(props.getCartCount())
       );
   };
-
+  //Get total cost of cart
   const getCartTotal = () => {
     return fetch(`http://localhost:5000/carttotal`).then((res) => res.json());
   };
@@ -54,7 +48,7 @@ const Cart = (props) => {
   return (
     <Fragment>
       <div className='top cart'></div>
-      <p>Cart total:${total ? total : 0}</p>
+      <p className='cart-total'>Cart total:${total ? total : 0}</p>
       <div className='product-list'>
         {cart.length ? (
           cart.map((product) => (
@@ -69,7 +63,7 @@ const Cart = (props) => {
             </div>
           ))
         ) : (
-          <p>Your cart is empty</p>
+          <p className='empty-cart'>Your cart is empty</p>
         )}
       </div>
     </Fragment>

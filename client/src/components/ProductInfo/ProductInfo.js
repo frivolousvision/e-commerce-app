@@ -13,11 +13,6 @@ const ProductInfo = ({ match }) => {
     getProduct();
   }, [match.params.id]);
 
-  // const getProduct = async () => {
-  // const product = await fetch(`http://localhost:5000/${match.params.id}`);
-  // const jsonProduct = await product.json();
-  // setProduct(jsonProduct);
-  // };
   const addToCart = async (id) => {
     fetch(`http://localhost:5000/addtocart/${id}`, {
       method: "PUT",

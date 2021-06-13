@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCartCount, selectCartCount } from "../../features/cartCountSlice";
 import "./header.css";
 import { Link } from "react-router-dom";
-import store from "../../store/store";
+// import store from "../../store/store";
 
 const Header = (props) => {
-  const state = store.getState();
+  // const state = store.getState();
 
   return (
     <div className='header'>

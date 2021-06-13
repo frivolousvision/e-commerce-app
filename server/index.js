@@ -107,7 +107,10 @@ app.get("/addtocart/:id", async (req, res) => {
       "UPDATE products SET in_cart = 'true' WHERE product_id = $1",
       [id]
     );
-    res.send();
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
+    );
+    res.send(count.rows);
     console.log("Added to cart");
   } catch (err) {
     console.error(err.message);

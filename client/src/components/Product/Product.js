@@ -15,8 +15,11 @@ const Product = (props) => {
       //   headers: { "Content-Type": "application/json" },
       // }
     )
-      .then((res) => console.log(res))
-      .then(props.getCartCount());
+      .then((res) => res.json())
+      .then((res) => dispatch(setCartCount(res[0].count)));
+
+    // .then((res) => console.log(res))
+    // .then(props.getCartCount());
   };
 
   //   const removeFromCart = async (id) => {

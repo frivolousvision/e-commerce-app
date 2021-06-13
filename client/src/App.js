@@ -16,7 +16,6 @@ import Cart from "./components/Cart/Cart";
 function App() {
   const [cartCount, setCartCount] = useState(0);
   // const dispatch = useDispatch();
-  // const [items, setItems] = useState("");
 
   // const cartCount = useSelector(selectCartCount);
   const getCartCount = () => {
