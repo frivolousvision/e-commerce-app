@@ -124,7 +124,10 @@ app.get("/removefromcart/:id", async (req, res) => {
       "UPDATE products SET in_cart = 'false' WHERE product_id = $1",
       [id]
     );
-    res.send();
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
+    );
+    res.send(count.rows);
     console.log("Removed from cart");
   } catch (err) {
     console.log(err.message);

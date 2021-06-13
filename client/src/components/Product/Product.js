@@ -8,18 +8,9 @@ const Product = (props) => {
 
   const addToCart = (id) => {
     console.log("add to cart clicked");
-    fetch(
-      `http://localhost:5000/addtocart/${id}`
-      // , {
-      //   method: "PUT",
-      //   headers: { "Content-Type": "application/json" },
-      // }
-    )
+    fetch(`http://localhost:5000/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
-
-    // .then((res) => console.log(res))
-    // .then(props.getCartCount());
   };
 
   //   const removeFromCart = async (id) => {

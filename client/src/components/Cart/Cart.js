@@ -10,6 +10,9 @@ const Cart = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const getCart = () => {
+      return fetch("http://localhost:5000/cart").then((res) => res.json());
+    };
     let mounted = true;
     getCart().then((res) => {
       if (mounted) {
@@ -24,19 +27,15 @@ const Cart = (props) => {
     return () => (mounted = false);
   }, []);
 
-  const getCart = () => {
-    return fetch("http://localhost:5000/cart").then((res) => res.json());
-  };
-
   //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     setCart(cart.filter((item) => item.product_id !== id));
     fetch(`http://localhost:5000/removefromcart/${id}`)
-      .then((res) => console.log(res))
+      .then((res) => res.json())
+      .then((res) => dispatch(setCartCount(res[0].count)))
       .then(
         getCartTotal()
           .then((res) => setTotal(res[0].sum))
-          .then(console.log(total))
           .then(props.getCartCount())
       );
   };

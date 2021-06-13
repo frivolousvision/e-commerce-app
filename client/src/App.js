@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 //Features
-// import { setCartCount, selectCartCount } from "./features/cartCountSlice";
+import { setCartCount, selectCartCount } from "./features/cartCountSlice";
 
 //Components
 import Header from "./components/Header/Header";
@@ -14,15 +14,14 @@ import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 
 function App() {
-  const [cartCount, setCartCount] = useState(0);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const cartCount = useSelector(selectCartCount);
+  const cartCount = useSelector(selectCartCount);
   const getCartCount = () => {
     console.log("reset cart called");
     return fetch("http://localhost:5000/count")
       .then((res) => res.json())
-      .then((res) => setCartCount(res[0].count));
+      .then((res) => dispatch(setCartCount(res[0].count)));
   };
 
   const loadCart = () => {
@@ -33,7 +32,7 @@ function App() {
     let mounted = true;
     loadCart().then((res) => {
       if (mounted) {
-        setCartCount(res[0].count);
+        dispatch(setCartCount(res[0].count));
       }
     });
     return () => (mounted = false);
