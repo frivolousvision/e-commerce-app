@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
 import "../Products/products.css";
@@ -48,8 +49,10 @@ const Cart = (props) => {
         {cart.length ? (
           cart.map((product) => (
             <div className='product-box' key={product.product_id}>
-              <img src={product.img_url} alt='' />
-              <h2>{product.name}</h2>
+              <Link to={`/${product.product_id}`}>
+                <img src={product.img_url} alt='' />
+                <h2>{product.name}</h2>
+              </Link>
               <h2>${product.price}</h2>
 
               <button onClick={() => removeFromCart(product.product_id)}>

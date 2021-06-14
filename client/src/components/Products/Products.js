@@ -25,11 +25,7 @@ const Products = (props) => {
       <div className='product-list'>
         {items ? (
           items.map((product, index) => (
-            <Product
-              product={product}
-              key={index}
-              getCartCount={props.getCartCount}
-            />
+            <Product product={product} key={index} />
           ))
         ) : (
           <p>Nothing was set</p>

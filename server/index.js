@@ -47,7 +47,9 @@ app.get("/count", async (req, res) => {
 
 app.get("/products", async (req, res) => {
   try {
-    const products = await pool.query("SELECT * FROM products");
+    const products = await pool.query(
+      "SELECT * FROM products ORDER BY price ASC"
+    );
     res.json(products.rows);
   } catch (err) {
     console.error(err.message);

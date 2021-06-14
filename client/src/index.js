@@ -3,9 +3,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
 import store from "./store/store";
-// const state = store.getState();
 
-// console.log(state);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

@@ -1,28 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { setCartCount } from "../../features/cartCountSlice";
-import { useDispatch } from "react-redux";
+import {
+  setCartTrue,
+  setCartFalse,
+  selectInCart,
+} from "../../features/inCartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Product = (props) => {
   //Redux Variable
   const dispatch = useDispatch();
+  const inCart = useSelector(selectInCart);
+  const [button, setButton] = useState();
+
   //Set "in_cart" to true in db, updates item count in cart
   const addToCart = (id) => {
+    dispatch(setCartTrue());
     fetch(`http://localhost:5000/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
+    setButton(true);
   };
 
-  //   const removeFromCart = async (id) => {
-  // dispatch(decrementCart);
-  // fetch(`http://localhost:5000/removefromcart/${id}`, {
-  //   method: "PUT",
-  //   headers: { "Content-Type": "application/json" },
-  // });
-  // setButton(false);
-  // props.getCartCount();
-  // console.log(button);
-  //   };
+  const removeFromCart = (id) => {
+    dispatch(setCartFalse());
+    fetch(`http://localhost:5000/removefromcart/${id}`)
+      .then((res) => res.json())
+      .then((res) => dispatch(setCartCount(res[0].count)));
+    setButton(false);
+  };
 
   return (
     <div className='product-box' key={props.product.product_id}>
@@ -36,13 +43,13 @@ const Product = (props) => {
         <button onClick={() => addToCart(props.product.product_id)}>
           Add to cart
         </button>
-        {/* {button || props.product.in_cart ? (
+        {button || props.product.in_cart ? (
           <button onClick={() => removeFromCart(props.product.product_id)}>
             Remove from cart
           </button>
         ) : (
           ""
-        )}*/}
+        )}
       </div>
     </div>
   );
