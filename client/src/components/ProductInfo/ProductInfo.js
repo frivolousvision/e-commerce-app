@@ -12,6 +12,7 @@ const ProductInfo = ({ match }) => {
   const dispatch = useDispatch();
   const inCart = useSelector(selectInCart);
   const [product, setProduct] = useState("");
+  const [button, setButton] = useState("");
 
   //Loads individual product on render
   useEffect(() => {
@@ -28,12 +29,18 @@ const ProductInfo = ({ match }) => {
     fetch(`http://localhost:5000/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
+    setButton(true);
+    setTimeout(() => setButton(false), 1000);
   };
   const removeFromCart = (id) => {
+    let count;
     dispatch(setCartFalse());
     fetch(`http://localhost:5000/removefromcart/${id}`)
       .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)));
+      .then((res) => {
+        count = res.count;
+      })
+      .then((res) => dispatch(setCartCount(count[0].count)));
   };
 
   return (
@@ -48,11 +55,16 @@ const ProductInfo = ({ match }) => {
               <h3>{productInfo.description}</h3>
               <h2>${productInfo.price}</h2>
               <div className='buttons'>
-                <button onClick={() => addToCart(productInfo.product_id)}>
-                  Add to cart
-                </button>
+                {button ? (
+                  <button className='add-to-cart-action'>Added to cart!</button>
+                ) : (
+                  <button onClick={() => addToCart(productInfo.product_id)}>
+                    Add to cart
+                  </button>
+                )}
                 {inCart ? (
                   <button
+                    className='remove-from-cart-button'
                     onClick={() => removeFromCart(productInfo.product_id)}
                   >
                     Remove from cart

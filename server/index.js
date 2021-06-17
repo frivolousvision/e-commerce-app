@@ -129,7 +129,10 @@ app.get("/removefromcart/:id", async (req, res) => {
     const count = await pool.query(
       "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
     );
-    res.send(count.rows);
+    const total = await pool.query(
+      "SELECT SUM(price) FROM products WHERE in_cart = 'true'"
+    );
+    res.send({ count: count.rows, total: total.rows });
     console.log("Removed from cart");
   } catch (err) {
     console.log(err.message);

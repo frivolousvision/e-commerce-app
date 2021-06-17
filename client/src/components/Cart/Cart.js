@@ -30,11 +30,17 @@ const Cart = (props) => {
 
   //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
+    let count;
+    let total;
     setCart(cart.filter((item) => item.product_id !== id));
     fetch(`http://localhost:5000/removefromcart/${id}`)
       .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)))
-      .then(getCartTotal().then((res) => setTotal(res[0].sum)));
+      .then((res) => {
+        total = res.total;
+        count = res.count;
+      })
+      .then((res) => dispatch(setCartCount(count[0].count)))
+      .then((res) => setTotal(total[0].sum));
   };
   //Get total cost of cart
   const getCartTotal = () => {
@@ -43,17 +49,19 @@ const Cart = (props) => {
 
   return (
     <Fragment>
-      <div className='top cart'></div>
-      <p className='cart-total'>Cart total:${total ? total : 0}</p>
+      <div className='top'></div>
+      <div className='cart-total-container'>
+        <p className='cart-total'>Cart total: ${total ? total : 0}</p>
+      </div>
       <div className='product-list'>
         {cart.length ? (
           cart.map((product) => (
             <div className='product-box' key={product.product_id}>
               <Link to={`/${product.product_id}`}>
-                <img src={product.img_url} alt='' />
+                <img className='cart-image' src={product.img_url} alt='' />
                 <h2>{product.name}</h2>
               </Link>
-              <h2>${product.price}</h2>
+              <h2 className='price'>${product.price}</h2>
 
               <button onClick={() => removeFromCart(product.product_id)}>
                 Remove from cart

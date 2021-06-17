@@ -12,7 +12,7 @@
 .product-list img {
   max-width: 100%;
   min-width: 20vh;
-  max-height: 50vh;
+  max-height: 45vh;
 }
 
 .product-box {
@@ -36,9 +36,26 @@
 }
 button {
   width: 10vw;
+  min-width: 8rem;
   height: 5vh;
   border-radius: 10px;
+  border: black;
+  color: white;
+  background-color: rgb(41, 41, 41);
+  font-size: 1rem;
+}
+button:hover {
+  background-color: rgb(54, 54, 54);
 }
 .buttons {
   display: inline-flex;
+}
+.add-to-cart-action:hover {
+  background-color: rgb(50, 168, 40);
+}
+.add-to-cart-action {
+  background-color: rgb(50, 168, 40);
+}
+.remove-from-cart-button {
+  margin-left: 0.2rem;
 }

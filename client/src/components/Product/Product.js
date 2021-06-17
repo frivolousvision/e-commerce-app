@@ -1,17 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { setCartCount } from "../../features/cartCountSlice";
-import {
-  setCartTrue,
-  setCartFalse,
-  selectInCart,
-} from "../../features/inCartSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { setCartTrue } from "../../features/inCartSlice";
+import { useDispatch } from "react-redux";
 
 const Product = (props) => {
   //Redux Variable
   const dispatch = useDispatch();
-  const inCart = useSelector(selectInCart);
   const [button, setButton] = useState();
 
   //Set "in_cart" to true in db, updates item count in cart
@@ -21,14 +16,7 @@ const Product = (props) => {
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);
-  };
-
-  const removeFromCart = (id) => {
-    dispatch(setCartFalse());
-    fetch(`http://localhost:5000/removefromcart/${id}`)
-      .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)));
-    setButton(false);
+    setTimeout(() => setButton(false), 1000);
   };
 
   return (
@@ -40,15 +28,12 @@ const Product = (props) => {
       <h3 className='description'>{props.product.description}</h3>
       <h2 className='price'>${props.product.price}</h2>
       <div className='buttons'>
-        <button onClick={() => addToCart(props.product.product_id)}>
-          Add to cart
-        </button>
-        {button || props.product.in_cart ? (
-          <button onClick={() => removeFromCart(props.product.product_id)}>
-            Remove from cart
-          </button>
+        {button ? (
+          <button className='add-to-cart-action'>Added to cart!</button>
         ) : (
-          ""
+          <button onClick={() => addToCart(props.product.product_id)}>
+            Add to cart
+          </button>
         )}
       </div>
     </div>

@@ -28,7 +28,7 @@ const Products = (props) => {
             <Product product={product} key={index} />
           ))
         ) : (
-          <p>Nothing was set</p>
+          <p>Loading...</p>
         )}
       </div>
     </Fragment>

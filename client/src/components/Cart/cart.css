@@ -2,12 +2,38 @@
 
 .cart-total {
   font-family: "Open Sans", sans-serif;
-  float: right;
-  margin-top: 10vh;
-  margin-right: 20vw;
+  text-align: center;
+  margin: 3rem;
   font-size: 1.3rem;
+  color: white;
 }
+.cart-total-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(41, 41, 41);
+  height: 5rem;
+  width: 12rem;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 8vh;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 2px white;
+}
+
 .empty-cart {
   margin-top: 10vh;
   font-size: 1.3rem;
+}
+.price {
+  margin-top: -0.2rem;
+}
+
+.product-list {
+  margin-bottom: 8rem;
+}
+.cart-image {
+  max-height: 2rem;
 }
