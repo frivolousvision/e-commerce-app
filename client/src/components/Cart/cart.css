@@ -37,3 +37,6 @@
 .cart-image {
   max-height: 2rem;
 }
+.removed-from-cart {
+  background-color: rgb(179, 33, 33);
+}
