@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 }
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 //GET ROUTES//
 
 //GET CART ITEMS
@@ -143,4 +143,4 @@ app.get("/removefromcart/:id", async (req, res) => {
   }
 });
 
-app.listen(port, console.log(`Server is running on ${port}`));
+app.listen(PORT, console.log(`Server is running on ${PORT}`));
