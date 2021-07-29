@@ -22,6 +22,7 @@ const ProductInfo = ({ match }) => {
       setProduct(jsonProduct);
     };
     getProduct();
+    console.log(product);
   }, [match.params.id]);
 
   const addToCart = (id) => {
@@ -62,14 +63,14 @@ const ProductInfo = ({ match }) => {
                     Add to cart
                   </button>
                 )}
-                {inCart ? (
+                {/* {inCart ? (
                   <button
                     className='remove-from-cart-button'
                     onClick={() => removeFromCart(productInfo.product_id)}
                   >
                     Remove from cart
                   </button>
-                ) : null}
+                ) : null} */}
               </div>
             </div>
           ))
