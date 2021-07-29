@@ -15,7 +15,7 @@ const Ipad = (props) => {
     return () => (mounted = false);
   }, []);
   const getIpads = async () => {
-    return fetch("/ipad").then((res) => res.json());
+    return fetch("/api/ipad").then((res) => res.json());
   };
 
   return (

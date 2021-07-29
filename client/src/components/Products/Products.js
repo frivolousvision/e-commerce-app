@@ -17,7 +17,7 @@ const Products = (props) => {
 
   const allProducts = () => {
     try {
-      return fetch("/products").then((res) => res.json());
+      return fetch("/api/products").then((res) => res.json());
     } catch (err) {
       console.error(err.message);
     }

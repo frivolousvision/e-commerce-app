@@ -18,7 +18,7 @@ const Mac = (props) => {
     return () => (mounted = false);
   }, []);
   const getMacs = () => {
-    return fetch("/mac").then((res) => res.json());
+    return fetch("/api/mac").then((res) => res.json());
   };
 
   return (

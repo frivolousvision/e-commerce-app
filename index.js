@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === "production") {
 //GET ROUTES//
 
 //GET CART ITEMS
-app.get("/cart", async (req, res) => {
+app.get("/api/cart", async (req, res) => {
   try {
     const products = await pool.query(
       "SELECT * FROM products WHERE in_cart = 'true'"
@@ -48,7 +48,7 @@ app.get("/count", async (req, res) => {
   }
 });
 
-app.get("/products", async (req, res) => {
+app.get("/api/products", async (req, res) => {
   try {
     const products = await pool.query(
       "SELECT * FROM products ORDER BY price ASC"
@@ -58,7 +58,7 @@ app.get("/products", async (req, res) => {
     console.error(err.message);
   }
 });
-app.get("/iphone", async (req, res) => {
+app.get("/api/iphone", async (req, res) => {
   try {
     const iphones = await pool.query(
       "SELECT * FROM products WHERE type = 'iphone' ORDER BY price DESC"
@@ -69,7 +69,7 @@ app.get("/iphone", async (req, res) => {
   }
 });
 
-app.get("/ipad", async (req, res) => {
+app.get("/api/ipad", async (req, res) => {
   try {
     const iphones = await pool.query(
       "SELECT * FROM products WHERE type = 'ipad' ORDER BY price DESC"
@@ -80,7 +80,7 @@ app.get("/ipad", async (req, res) => {
   }
 });
 
-app.get("/mac", async (req, res) => {
+app.get("/api/mac", async (req, res) => {
   try {
     const iphones = await pool.query(
       "SELECT * FROM products WHERE type = 'mac' ORDER BY price DESC"
@@ -91,7 +91,7 @@ app.get("/mac", async (req, res) => {
   }
 });
 
-app.get("/:id", async (req, res) => {
+app.get("/api/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const getProduct = await pool.query(

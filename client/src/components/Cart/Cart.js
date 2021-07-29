@@ -12,7 +12,7 @@ const Cart = (props) => {
 
   useEffect(() => {
     const getCart = () => {
-      return fetch("/cart").then((res) => res.json());
+      return fetch("/api/cart").then((res) => res.json());
     };
     let mounted = true;
     getCart().then((res) => {

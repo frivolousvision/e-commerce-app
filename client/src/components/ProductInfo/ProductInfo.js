@@ -10,14 +10,14 @@ import "../Products/products.css";
 
 const ProductInfo = ({ match }) => {
   const dispatch = useDispatch();
-  const inCart = useSelector(selectInCart);
+  // const inCart = useSelector(selectInCart);
   const [product, setProduct] = useState("");
   const [button, setButton] = useState("");
 
   //Loads individual product on render
   useEffect(() => {
     const getProduct = async () => {
-      const response = await fetch(`/${match.params.id}`);
+      const response = await fetch(`api/${match.params.id}`);
       const jsonProduct = await response.json();
       setProduct(jsonProduct);
     };
