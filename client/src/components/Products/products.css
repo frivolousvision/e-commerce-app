@@ -43,7 +43,6 @@ button {
   color: white;
   background-color: rgb(41, 41, 41);
   font-size: 1rem;
-  padding: 1rem;
   cursor: pointer;
 }
 button:hover {
@@ -60,4 +59,12 @@ button:hover {
 }
 .remove-from-cart-button {
   margin-left: 0.2rem;
+}
+@media only screen and (max-width: 600px) {
+  .buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+  }
 }
