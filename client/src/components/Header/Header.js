@@ -113,7 +113,11 @@ const Header = (props) => {
               <p onClick={hideSidebar}>Register</p>
             </Link>
           ) : null}
-          {props.isAuthenticated ? <p onClick={logout}>Logout</p> : null}
+          {props.isAuthenticated ? (
+            <p onClick={logout} className='logout-link'>
+              Logout
+            </p>
+          ) : null}
           <FontAwesomeIcon
             icon={faTimesCircle}
             className='fa-times-circle'

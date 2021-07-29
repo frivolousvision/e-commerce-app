@@ -80,9 +80,11 @@ const Cart = (props) => {
           <p className='empty-cart'>Your cart is empty</p>
         )}
       </div>
-      <button onClick={(e) => logout(e)} className='logout-button'>
-        Logout
-      </button>
+      <div className='logout-container'>
+        <button onClick={(e) => logout(e)} className='logout-button'>
+          Logout
+        </button>
+      </div>
     </Fragment>
   );
 };

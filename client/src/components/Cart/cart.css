@@ -40,3 +40,11 @@
 .removed-from-cart {
   background-color: rgb(179, 33, 33);
 }
+.logout-container {
+  display: flex;
+  justify-content: center;
+}
+.logout-button:hover {
+  background-color: red;
+  cursor: pointer;
+}
