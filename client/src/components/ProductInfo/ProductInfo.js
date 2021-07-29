@@ -26,7 +26,7 @@ const ProductInfo = ({ match }) => {
 
   const addToCart = (id) => {
     dispatch(setCartTrue());
-    fetch(`/${id}`)
+    fetch(`/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);
@@ -35,7 +35,7 @@ const ProductInfo = ({ match }) => {
   const removeFromCart = (id) => {
     let count;
     dispatch(setCartFalse());
-    fetch(`/${id}`)
+    fetch(`removefromcart/${id}`)
       .then((res) => res.json())
       .then((res) => {
         count = res.count;

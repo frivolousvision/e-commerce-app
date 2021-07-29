@@ -34,3 +34,64 @@ a:hover {
   left: 3vw;
   margin-top: -2.2vh;
 }
+.mobile-header {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .header-list {
+    display: none;
+  }
+  .mobile-header {
+    background-color: rgb(41, 41, 41);
+    width: 100%;
+    height: 7vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    box-shadow: 3px 0px 1px black;
+    position: fixed;
+    top: 0;
+    z-index: 15;
+  }
+  .mobile-header-list {
+    background-color: rgb(41, 41, 41);
+    font-family: "Open sans", sans-serif;
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+
+  .fa-bars {
+    font-size: 2rem;
+    margin-right: 1rem;
+  }
+  .mobile-side-bar {
+    width: 0;
+  }
+  .sidebar {
+    background-color: rgb(41, 41, 41);
+    height: 100%;
+    z-index: 30;
+    position: fixed;
+    width: 0;
+    top: 0;
+    right: 0;
+    transition: 500ms;
+    font-family: "Open sans", sans-serif;
+  }
+  .sidebar-content {
+    margin-top: 4rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.4rem;
+  }
+  .sidebar a {
+    text-decoration: none;
+    color: white;
+  }
+  .fa-times-circle {
+    color: white;
+    margin-top: 6rem;
+  }
+}

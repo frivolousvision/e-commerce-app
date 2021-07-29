@@ -4,6 +4,8 @@ import { selectCartCount, setCartCount } from "../../features/cartCountSlice";
 import "./header.css";
 import { Link } from "react-router-dom";
 import appleLogo from "./apple-white.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
 const Header = (props) => {
   //Redux Variables
@@ -26,6 +28,21 @@ const Header = (props) => {
     return () => (mounted = false);
   }, [dispatch]);
 
+  const showSidebar = () => {
+    const sidebar = document.getElementsByClassName("sidebar")[0];
+    const sidebarContent =
+      document.getElementsByClassName("sidebar-content")[0];
+    sidebar.style.width = "50vw";
+    sidebarContent.style.display = "flex";
+  };
+  const hideSidebar = () => {
+    const sidebar = document.getElementsByClassName("sidebar")[0];
+    const sidebarContent =
+      document.getElementsByClassName("sidebar-content")[0];
+    sidebar.style.width = "0";
+    sidebarContent.style.display = "flex";
+  };
+
   return (
     <>
       <div className='header'>
@@ -46,6 +63,44 @@ const Header = (props) => {
             <ul>Cart ({cartCount})</ul>
           </Link>
         </li>
+      </div>
+      <div className='mobile-header'>
+        <div className='mobile-header-list'>
+          <Link to='/'>
+            <img
+              src={appleLogo}
+              alt=''
+              className='logo'
+              onClick={hideSidebar}
+            />
+          </Link>
+          <FontAwesomeIcon
+            icon={faBars}
+            className='fa-bars'
+            onClick={showSidebar}
+          />
+        </div>
+      </div>
+      <div className='sidebar'>
+        <div className='sidebar-content'>
+          <Link to='/iphone'>
+            <p onClick={hideSidebar}>iPhone</p>
+          </Link>
+          <Link to='/ipad'>
+            <p onClick={hideSidebar}>iPad</p>
+          </Link>
+          <Link to='/mac'>
+            <p onClick={hideSidebar}>MacBook</p>
+          </Link>
+          <Link to='/cart'>
+            <p onClick={hideSidebar}>Cart ({cartCount})</p>
+          </Link>
+          <FontAwesomeIcon
+            icon={faTimesCircle}
+            className='fa-times-circle'
+            onClick={hideSidebar}
+          />
+        </div>
       </div>
     </>
   );
