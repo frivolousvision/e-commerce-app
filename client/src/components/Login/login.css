@@ -18,16 +18,16 @@
   flex-direction: column;
 }
 .email-input {
-  width: 100%;
+  width: 80%;
   font-size: 1.2rem;
 }
 .password-input {
-  width: 100%;
+  width: 80%;
   font-size: 1.2rem;
   margin-top: 1rem;
 }
 .submit-button {
-  width: 100%;
+  width: 80%;
   margin-top: 1rem;
   cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { setCartCount } from "../../features/cartCountSlice";
 import { setCartTrue } from "../../features/inCartSlice";
 import { useDispatch } from "react-redux";
+import "./product.css";
 
 const Product = (props) => {
   //Redux Variable

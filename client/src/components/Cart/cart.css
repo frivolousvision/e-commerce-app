@@ -48,15 +48,18 @@
   background-color: red;
   cursor: pointer;
 }
-@media only screen and (min-width: 600px) {
-  .cart-total {
-    width: 60%;
+@media only screen and (max-width: 600px) {
+  .cart-total-container {
+    width: 90%;
   }
   .remove-from-cart-button {
-    width: 60%;
+    width: 100%;
   }
   .logout-container {
-    width: 60%;
+    width: 100%;
+  }
+  .logout-button {
+    width: 90%;
     margin-bottom: 0.5rem;
   }
 }
