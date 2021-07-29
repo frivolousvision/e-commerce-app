@@ -71,7 +71,10 @@ const Cart = (props) => {
               </Link>
               <h2 className='price'>${product.price}</h2>
 
-              <button onClick={() => removeFromCart(product.product_id)}>
+              <button
+                onClick={() => removeFromCart(product.product_id)}
+                className='remove-from-cart-button'
+              >
                 Remove from cart
               </button>
             </div>
