@@ -1,19 +1,18 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
-const { urlencoded } = require("express");
 const cors = require("cors");
 const pool = require("./db");
 const query = require("express");
+const PORT = process.env.PORT || 5000;
 const path = require("path");
 
 app.use(cors());
 app.use(express.json());
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 }
 
-const PORT = process.env.PORT || 5000;
 //GET ROUTES//
 
 //GET CART ITEMS
