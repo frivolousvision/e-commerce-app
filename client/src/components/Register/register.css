@@ -14,20 +14,18 @@
   margin-top: 6rem;
 }
 .form-container {
-  display: block;
-  flex-direction: column;
 }
 .email-input {
-  width: 80%;
+  width: 99%;
   font-size: 1.2rem;
 }
 .password-input {
-  width: 80%;
+  width: 99%;
   font-size: 1.2rem;
   margin-top: 1rem;
 }
 .name-input {
-  width: 80%;
+  width: 100%;
   font-size: 1.2rem;
   margin-top: 1rem;
 }
@@ -45,4 +43,9 @@
 }
 .login-link:hover {
   color: rgb(50, 168, 40);
+}
+@media only screens and (max-width: 600px) {
+  .form-container-login {
+    width: 80%;
+  }
 }

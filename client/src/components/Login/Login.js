@@ -42,10 +42,10 @@ const Login = ({ setAuth }) => {
     <Fragment>
       <div className='login-container'>
         <h1 className='login-header'>Login to view and edit your cart</h1>
-        <div className='form-container'>
+        <div className='form-container-login'>
           <form onSubmit={onSubmitForm}>
             <input
-              className='email-input'
+              className='email-input-login'
               type='email'
               name='email'
               placeholder='email'
@@ -53,14 +53,14 @@ const Login = ({ setAuth }) => {
               onChange={(e) => onChange(e)}
             />
             <input
-              className='password-input'
+              className='password-input-login'
               type='password'
               name='password'
               placeholder='password'
               value={password}
               onChange={(e) => onChange(e)}
             />
-            <button className='submit-button'>Submit</button>
+            <button className='submit-button-login'>Submit</button>
           </form>
         </div>
         <p>Don't have an account?</p>

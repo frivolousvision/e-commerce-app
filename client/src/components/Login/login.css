@@ -13,21 +13,18 @@
 .login-header {
   margin-top: 6rem;
 }
-.form-container {
-  display: block;
-  flex-direction: column;
-}
-.email-input {
-  width: 80%;
+
+.email-input-login {
+  width: 99%;
   font-size: 1.2rem;
 }
-.password-input {
-  width: 80%;
+.password-input-login {
+  width: 99%;
   font-size: 1.2rem;
   margin-top: 1rem;
 }
-.submit-button {
-  width: 80%;
+.submit-button-login {
+  width: 100%;
   margin-top: 1rem;
   cursor: pointer;
 }
@@ -40,4 +37,9 @@
 }
 .register-link:hover {
   color: rgb(50, 168, 40);
+}
+@media only screens and (max-width: 600px) {
+  .form-container-login {
+    width: 80%;
+  }
 }
