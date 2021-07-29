@@ -90,6 +90,9 @@ a:hover {
     text-decoration: none;
     color: white;
   }
+  .sidebar p {
+    color: white;
+  }
   .fa-times-circle {
     color: white;
     margin-top: 6rem;

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import appleLogo from "./apple-white.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { toast } from "react-toastify";
 
 const Header = (props) => {
   //Redux Variables
@@ -40,7 +41,14 @@ const Header = (props) => {
     const sidebarContent =
       document.getElementsByClassName("sidebar-content")[0];
     sidebar.style.width = "0";
-    sidebarContent.style.display = "flex";
+    sidebarContent.style.display = "none";
+  };
+  const logout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    props.setAuth(false);
+    toast.success("You logged out successfully");
+    hideSidebar();
   };
 
   return (
@@ -95,6 +103,17 @@ const Header = (props) => {
           <Link to='/cart'>
             <p onClick={hideSidebar}>Cart ({cartCount})</p>
           </Link>
+          {!props.isAuthenticated ? (
+            <Link to='/login'>
+              <p onClick={hideSidebar}>Login</p>
+            </Link>
+          ) : null}
+          {!props.isAuthenticated ? (
+            <Link to='/register'>
+              <p onClick={hideSidebar}>Register</p>
+            </Link>
+          ) : null}
+          {props.isAuthenticated ? <p onClick={logout}>Logout</p> : null}
           <FontAwesomeIcon
             icon={faTimesCircle}
             className='fa-times-circle'

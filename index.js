@@ -9,6 +9,12 @@ const path = require("path");
 app.use(cors());
 app.use(express.json());
 
+//Register and Login Routes
+app.use("/auth", require("./routes/jwtAuth"));
+
+//Dashboard Route
+app.use("/dashboard", require("./routes/dashboard"));
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
 }

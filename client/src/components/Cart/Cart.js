@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
+import { toast } from "react-toastify";
 import "../Products/products.css";
 import "./cart.css";
 
@@ -46,6 +47,13 @@ const Cart = (props) => {
   const getCartTotal = () => {
     return fetch(`/carttotal`).then((res) => res.json());
   };
+  const logout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    props.setAuth(false);
+    toast.success("You logged out successfully");
+    console.log(props.isAuthenticated);
+  };
 
   return (
     <Fragment>
@@ -72,6 +80,9 @@ const Cart = (props) => {
           <p className='empty-cart'>Your cart is empty</p>
         )}
       </div>
+      <button onClick={(e) => logout(e)} className='logout-button'>
+        Logout
+      </button>
     </Fragment>
   );
 };
