@@ -12,7 +12,7 @@ const Header = (props) => {
 
   //Fetches total items in cart
   const loadCart = () => {
-    return fetch("http://localhost:5000/count").then((res) => res.json());
+    return fetch("/count").then((res) => res.json());
   };
 
   //Renders total items in cart

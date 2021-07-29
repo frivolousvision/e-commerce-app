@@ -5,9 +5,13 @@ const { urlencoded } = require("express");
 const cors = require("cors");
 const pool = require("./db");
 const query = require("express");
+const path = require("path");
 
 app.use(cors());
 app.use(express.json());
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
 
 const port = process.env.PORT || 5000;
 //GET ROUTES//
@@ -140,6 +144,3 @@ app.get("/removefromcart/:id", async (req, res) => {
 });
 
 app.listen(port, console.log(`Server is running on ${port}`));
-
-/*"INSERT INTO cart (name, price, type, img_url, product_id) SELECT products.name, products.price, products.type, products.img_url, products.product_id FROM products WHERE product_id = $1",
-      [id]*/

@@ -16,7 +16,11 @@ const Products = (props) => {
   }, []);
 
   const allProducts = () => {
-    return fetch("http://localhost:5000/products").then((res) => res.json());
+    try {
+      return fetch("/products").then((res) => res.json());
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return (

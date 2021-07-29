@@ -16,7 +16,7 @@ const Iphone = (props) => {
     return () => (mounted = false);
   }, []);
   const getIphones = () => {
-    return fetch("http://localhost:5000/iphone").then((res) => res.json());
+    return fetch("/iphone").then((res) => res.json());
   };
   return (
     <Fragment>

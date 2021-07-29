@@ -12,7 +12,7 @@ const Product = (props) => {
   //Set "in_cart" to true in db, updates item count in cart
   const addToCart = (id) => {
     dispatch(setCartTrue());
-    fetch(`http://localhost:5000/addtocart/${id}`)
+    fetch(`/addtocart/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);

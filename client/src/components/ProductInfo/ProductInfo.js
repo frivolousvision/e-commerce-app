@@ -17,7 +17,7 @@ const ProductInfo = ({ match }) => {
   //Loads individual product on render
   useEffect(() => {
     const getProduct = async () => {
-      const response = await fetch(`http://localhost:5000/${match.params.id}`);
+      const response = await fetch(`/${match.params.id}`);
       const jsonProduct = await response.json();
       setProduct(jsonProduct);
     };
@@ -26,7 +26,7 @@ const ProductInfo = ({ match }) => {
 
   const addToCart = (id) => {
     dispatch(setCartTrue());
-    fetch(`http://localhost:5000/addtocart/${id}`)
+    fetch(`/${id}`)
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);
@@ -35,7 +35,7 @@ const ProductInfo = ({ match }) => {
   const removeFromCart = (id) => {
     let count;
     dispatch(setCartFalse());
-    fetch(`http://localhost:5000/removefromcart/${id}`)
+    fetch(`/${id}`)
       .then((res) => res.json())
       .then((res) => {
         count = res.count;

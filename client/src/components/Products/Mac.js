@@ -18,7 +18,7 @@ const Mac = (props) => {
     return () => (mounted = false);
   }, []);
   const getMacs = () => {
-    return fetch("http://localhost:5000/mac").then((res) => res.json());
+    return fetch("/mac").then((res) => res.json());
   };
 
   return (

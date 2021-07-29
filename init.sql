@@ -1,4 +1,4 @@
-CREATE DATABASE e_commerce_db;
+--CREATE DATABASE e_commerce_db;
 
 CREATE TABLE products (
     product_id SERIAL PRIMARY KEY,
@@ -44,10 +44,8 @@ INSERT INTO products(name, description, price, type, img_url, in_cart) VALUES (
     'false'
     );
 
-/*UPDATE iphones SET img_url = 'https://ss71.vzw.com/is/image/VerizonWireless/iphone-12-pro-pacific-blue?fmt=pjpg&hei=520&wid=350'
-WHERE name = 'iPhone 12 Pro';*/
 
-///IPAD INSERTS////
+
 INSERT INTO products(name, description, price, type, img_url, in_cart) VALUES (
     'iPad Pro',
     '12.9-inch display',
@@ -75,7 +73,7 @@ INSERT INTO products(name, description, price, type, img_url, in_cart) VALUES (
     'false'
     );
 
-///MAC INSERTS////
+
 INSERT INTO products(name, description, price, type, img_url, in_cart) VALUES (
     'MacBook Air',
     '13.3-inch retina display',
@@ -102,12 +100,4 @@ INSERT INTO products(name, description, price, type, img_url, in_cart) VALUES (
     'false'
     );
 
-//CART INSERT TESTS
-INSERT INTO cart(name, description, price, type, img_url) VALUES (
-    'MacBook Pro',
-    '16-inch retina display',
-    2399,
-    'mac',
-    'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp16touch-space-select-201911?wid=452&hei=420&fmt=jpeg&qlt=95&.v=1572825197207',
-    'false'
-    );
+

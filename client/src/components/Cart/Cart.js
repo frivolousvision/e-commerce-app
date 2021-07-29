@@ -12,7 +12,7 @@ const Cart = (props) => {
 
   useEffect(() => {
     const getCart = () => {
-      return fetch("http://localhost:5000/cart").then((res) => res.json());
+      return fetch("/cart").then((res) => res.json());
     };
     let mounted = true;
     getCart().then((res) => {
@@ -33,7 +33,7 @@ const Cart = (props) => {
     let count;
     let total;
     setCart(cart.filter((item) => item.product_id !== id));
-    fetch(`http://localhost:5000/removefromcart/${id}`)
+    fetch(`/removefromcart/${id}`)
       .then((res) => res.json())
       .then((res) => {
         total = res.total;
@@ -44,7 +44,7 @@ const Cart = (props) => {
   };
   //Get total cost of cart
   const getCartTotal = () => {
-    return fetch(`http://localhost:5000/carttotal`).then((res) => res.json());
+    return fetch(`/carttotal`).then((res) => res.json());
   };
 
   return (
