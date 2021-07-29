@@ -75,7 +75,7 @@ const ProductInfo = ({ match }) => {
             </div>
           ))
         ) : (
-          <p>Nothing was set</p>
+          <p>Sorry, looks like this page doesn't exist</p>
         )}
       </div>
     </Fragment>
