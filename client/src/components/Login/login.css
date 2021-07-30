@@ -2,7 +2,10 @@
 * {
   font-family: "Open Sans", sans-serif;
 }
-
+input {
+  margin: 0;
+  padding: 0;
+}
 .login-header {
   margin-top: 6rem;
 }
@@ -39,10 +42,9 @@
 .register-link:hover {
   color: rgb(50, 168, 40);
 }
-@media only screens and (max-width: 600px) {
+@media only screen and (max-width: 600px) {
   .login-container {
-    width: 90%;
-    max-width: 300px;
+    width: 80%;
     min-width: 250px;
   }
 }

@@ -2,7 +2,10 @@
 * {
   font-family: "Open Sans", sans-serif;
 }
-
+input {
+  margin: 0;
+  padding: 0;
+}
 .login-header {
   margin-top: 6rem;
 }
@@ -46,8 +49,8 @@
 }
 @media only screen and (max-width: 600px) {
   .register-container {
-    width: 90%;
-    max-width: 300px;
+    width: 75%;
     min-width: 250px;
+    border: 1px soild red;
   }
 }
