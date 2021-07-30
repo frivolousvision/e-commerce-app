@@ -44,8 +44,11 @@
   display: flex;
   justify-content: center;
 }
-.logout-button:hover {
+.logout-button {
   background-color: red;
+}
+.logout-button:hover {
+  background-color: rgb(156, 6, 6);
   cursor: pointer;
 }
 @media only screen and (max-width: 600px) {
