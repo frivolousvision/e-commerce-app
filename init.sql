@@ -107,3 +107,21 @@ CREATE TABLE users (
     user_email varchar (255) NOT NULL,
     user_password varchar (255) NOT NULL
 );
+------TESTS-------
+CREATE TABLE users_products_cart (
+    user_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, product_id)
+);
+
+INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4'); dan
+INSERT INTO users_products VALUES ( 'd16dee11-5548-4dfe-8d6c-034907e789e1', '4'); alex
+INSERT INTO users_products VALUES ( '7360be7b-35ae-4f88-954b-ae43204e0658', '4'); burger
+INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '6'); dan
+INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '7'); dan
+
+SELECT users.user_email AS user_email, products.name AS product_name, products.price AS price
+FROM users, products, users_products
+WHERE users_products.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND users.user_id = users_products.user_id 
+AND products.product_id = users_products.product_id;
