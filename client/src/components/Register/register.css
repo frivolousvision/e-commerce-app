@@ -53,6 +53,8 @@
 }
 @media only screen and (max-width: 600px) {
   .register-container {
-    width: 80%;
+    width: 90%;
+    max-width: 400px;
+    min-width: 300px;
   }
 }
