@@ -5,6 +5,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //Components
 import Header from "./components/Header/Header";
@@ -16,6 +18,8 @@ import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+
+toast.configure();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -93,6 +97,17 @@ function App() {
           />
         </Switch>
       </Router>
+      <ToastContainer
+        position='top-right'
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </Fragment>
   );
 }
