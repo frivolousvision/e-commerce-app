@@ -2,18 +2,19 @@
 * {
   font-family: "Open Sans", sans-serif;
 }
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  width: 100%;
-}
+
 .login-header {
   margin-top: 6rem;
 }
-
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  margin: 0 auto;
+  border: 1px solid red;
+}
 .email-input-login {
   width: 99%;
   font-size: 1.2rem;
@@ -39,7 +40,7 @@
   color: rgb(50, 168, 40);
 }
 @media only screens and (max-width: 600px) {
-  .form-container-login {
+  .login-container {
     width: 80%;
   }
 }

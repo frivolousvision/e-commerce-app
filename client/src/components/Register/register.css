@@ -2,18 +2,24 @@
 * {
   font-family: "Open Sans", sans-serif;
 }
-.login-container {
+/* .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   width: 100%;
-}
+} */
 .login-header {
   margin-top: 6rem;
 }
-.form-container {
+.register-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+  margin: 0 auto;
 }
 .email-input {
   width: 99%;
@@ -25,12 +31,12 @@
   margin-top: 1rem;
 }
 .name-input {
-  width: 100%;
+  width: 99%;
   font-size: 1.2rem;
   margin-top: 1rem;
 }
 .submit-button {
-  width: 80%;
+  width: 100%;
   margin-top: 1rem;
   cursor: pointer;
 }
@@ -44,8 +50,8 @@
 .login-link:hover {
   color: rgb(50, 168, 40);
 }
-@media only screens and (max-width: 600px) {
-  .form-container-login {
+@media only screen and (max-width: 600px) {
+  .register-container {
     width: 80%;
   }
 }
