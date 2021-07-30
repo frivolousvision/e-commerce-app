@@ -11,9 +11,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  max-width: 500px;
+  min-width: 400px;
   margin: 0 auto;
-  border: 1px solid red;
 }
 .email-input-login {
   width: 99%;
@@ -41,6 +41,6 @@
 }
 @media only screens and (max-width: 600px) {
   .login-container {
-    width: 80%;
+    width: 90%;
   }
 }
