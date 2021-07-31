@@ -152,3 +152,9 @@ DELETE FROM users_products_cart USING products, users
 WHERE products.product_id = '4'
 AND users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
 AND products.product_id = users_products_cart.product_id;
+
+SELECT SUM(products.price)
+FROM users, products, users_products_cart
+WHERE users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND users.user_id = users_products_cart.user_id 
+AND products.product_id = users_products_cart.product_id;

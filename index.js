@@ -37,7 +37,8 @@ app.get("/api/cart", authorization, async (req, res) => {
 app.get("/carttotal", async (req, res) => {
   try {
     const products = await pool.query(
-      "SELECT SUM(price) FROM products WHERE in_cart = 'true'"
+      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     res.json(products.rows);
   } catch (err) {
