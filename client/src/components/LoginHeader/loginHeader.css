@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
 .login-message {
   display: flex;
   justify-content: center;
@@ -6,6 +7,7 @@
   margin-top: 5rem;
   margin-bottom: -3rem;
   cursor: pointer;
+  font-family: "Open Sans", sans-serif;
 }
 .login-message:hover {
   color: black;
