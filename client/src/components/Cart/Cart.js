@@ -13,14 +13,22 @@ const Cart = (props) => {
 
   useEffect(() => {
     const getCart = () => {
-      return fetch("/api/cart").then((res) => res.json());
+      return fetch("/api/cart", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      }).then((res) => res.json());
     };
     let mounted = true;
-    getCart().then((res) => {
-      if (mounted) {
-        setCart(res);
-      }
-    });
+    try {
+      getCart().then((res) => {
+        if (mounted) {
+          setCart(res);
+        }
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+
     getCartTotal().then((res) => {
       if (mounted) {
         setTotal(res[0].sum);
@@ -34,9 +42,13 @@ const Cart = (props) => {
     let count;
     let total;
     setCart(cart.filter((item) => item.product_id !== id));
-    fetch(`/removefromcart/${id}`)
+    fetch(`/removefromcart/${id}`, {
+      method: "GET",
+      headers: { token: localStorage.token },
+    })
       .then((res) => res.json())
       .then((res) => {
+        // console.log(res);
         total = res.total;
         count = res.count;
       })
@@ -51,6 +63,7 @@ const Cart = (props) => {
     e.preventDefault();
     localStorage.removeItem("token");
     props.setAuth(false);
+    props.loadCart();
     toast.success("You logged out successfully");
     console.log(props.isAuthenticated);
   };

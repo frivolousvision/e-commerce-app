@@ -24,7 +24,11 @@ const Iphone = (props) => {
       <div className='product-list'>
         {items ? (
           items.map((product, index) => (
-            <Product product={product} key={index} />
+            <Product
+              product={product}
+              key={index}
+              isAuthenticated={props.isAuthenticated}
+            />
           ))
         ) : (
           <p>Loading...</p>

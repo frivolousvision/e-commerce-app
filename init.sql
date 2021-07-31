@@ -114,14 +114,41 @@ CREATE TABLE users_products_cart (
     PRIMARY KEY (user_id, product_id)
 );
 
-INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4'); dan
-INSERT INTO users_products VALUES ( 'd16dee11-5548-4dfe-8d6c-034907e789e1', '4'); alex
-INSERT INTO users_products VALUES ( '7360be7b-35ae-4f88-954b-ae43204e0658', '4'); burger
-INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '6'); dan
-INSERT INTO users_products VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '7'); dan
+INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4');
+INSERT INTO users_products_cart VALUES ( 'd16dee11-5548-4dfe-8d6c-034907e789e1', '4');
+INSERT INTO users_products_cart VALUES ( '7360be7b-35ae-4f88-954b-ae43204e0658', '4');
+INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '6');
+INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '7');
 
 SELECT users.user_email AS user_email, products.name AS product_name, products.price AS price
-FROM users, products, users_products
-WHERE users_products.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
-AND users.user_id = users_products.user_id 
-AND products.product_id = users_products.product_id;
+FROM users, products, users_products_cart
+WHERE users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND users.user_id = users_products_cart.user_id 
+AND products.product_id = users_products_cart.product_id;
+
+SELECT COUNT(*)
+FROM users, products, users_products_cart
+WHERE users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND users.user_id = users_products_cart.user_id 
+AND products.product_id = users_products_cart.product_id;
+
+SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url
+FROM users, products, users_products_cart
+WHERE users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND users.user_id = users_products_cart.user_id 
+AND products.product_id = users_products_cart.product_id;
+
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR (255),
+    price INT,
+    type VARCHAR(255),
+    img_url VARCHAR(500),
+    in_cart BOOLEAN
+);
+
+DELETE FROM users_products_cart USING products, users
+WHERE products.product_id = '4'
+AND users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
+AND products.product_id = users_products_cart.product_id;

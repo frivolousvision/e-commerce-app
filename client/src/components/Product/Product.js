@@ -13,8 +13,12 @@ const Product = (props) => {
   //Set "in_cart" to true in db, updates item count in cart
   const addToCart = (id) => {
     dispatch(setCartTrue());
-    fetch(`/addtocart/${id}`)
+    fetch(`/addtocart/${id}`, {
+      method: "GET",
+      headers: { token: localStorage.token },
+    })
       .then((res) => res.json())
+
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);
     setTimeout(() => setButton(false), 1000);
@@ -29,16 +33,20 @@ const Product = (props) => {
       <h3 className='description'>{props.product.description}</h3>
       <h2 className='price'>${props.product.price}</h2>
       <div className='buttons'>
-        {button ? (
-          <button className='add-to-cart-action buttons'>Added to cart!</button>
-        ) : (
-          <button
-            className='buttons'
-            onClick={() => addToCart(props.product.product_id)}
-          >
-            Add to cart
-          </button>
-        )}
+        {props.isAuthenticated ? (
+          button ? (
+            <button className='add-to-cart-action buttons'>
+              Added to cart!
+            </button>
+          ) : (
+            <button
+              className='buttons'
+              onClick={() => addToCart(props.product.product_id)}
+            >
+              Add to cart
+            </button>
+          )
+        ) : null}
       </div>
     </div>
   );

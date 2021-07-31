@@ -8,9 +8,8 @@ import {
 } from "../../features/inCartSlice";
 import "../Products/products.css";
 
-const ProductInfo = ({ match }) => {
+const ProductInfo = ({ match, isAuthenticated }) => {
   const dispatch = useDispatch();
-  // const inCart = useSelector(selectInCart);
   const [product, setProduct] = useState("");
   const [button, setButton] = useState("");
 
@@ -27,7 +26,10 @@ const ProductInfo = ({ match }) => {
 
   const addToCart = (id) => {
     dispatch(setCartTrue());
-    fetch(`/addtocart/${id}`)
+    fetch(`/addtocart/${id}`, {
+      method: "GET",
+      headers: { token: localStorage.token },
+    })
       .then((res) => res.json())
       .then((res) => dispatch(setCartCount(res[0].count)));
     setButton(true);
@@ -36,7 +38,10 @@ const ProductInfo = ({ match }) => {
   const removeFromCart = (id) => {
     let count;
     dispatch(setCartFalse());
-    fetch(`removefromcart/${id}`)
+    fetch(`removefromcart/${id}`, {
+      method: "GET",
+      headers: { token: localStorage.token },
+    })
       .then((res) => res.json())
       .then((res) => {
         count = res.count;
@@ -56,13 +61,21 @@ const ProductInfo = ({ match }) => {
               <h3>{productInfo.description}</h3>
               <h2>${productInfo.price}</h2>
               <div className='buttons'>
-                {button ? (
-                  <button className='add-to-cart-action'>Added to cart!</button>
-                ) : (
-                  <button onClick={() => addToCart(productInfo.product_id)}>
-                    Add to cart
-                  </button>
-                )}
+                {isAuthenticated ? (
+                  button ? (
+                    <button className='add-to-cart-action buttons'>
+                      Added to cart!
+                    </button>
+                  ) : (
+                    <button
+                      className='buttons'
+                      onClick={() => addToCart(product.product_id)}
+                    >
+                      Add to cart
+                    </button>
+                  )
+                ) : null}
+
                 {/* {inCart ? (
                   <button
                     className='remove-from-cart-button'

@@ -5,6 +5,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartCount, setCartCount } from "./features/cartCountSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -18,11 +20,15 @@ import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
+import LoginHeader from "./components/LoginHeader/LoginHeader";
 
 toast.configure();
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const dispatch = useDispatch();
+  const cartCount = useSelector(selectCartCount);
 
   const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
@@ -40,19 +46,61 @@ function App() {
       console.log(err.message);
     }
   };
+  const loadCart = () => {
+    try {
+      if (!localStorage.token) {
+        return dispatch(setCartCount(0));
+      }
+      return fetch("/count", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          return dispatch(setCartCount(res[0].count));
+        });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   useEffect(() => {
+    let mounted = true;
     isAuth();
-  }, []);
+    if (mounted) {
+      loadCart();
+      return () => (mounted = false);
+    }
+  }, [dispatch, localStorage.token]);
+
   return (
     <Fragment>
       <Router>
         <Header isAuthenticated={isAuthenticated} setAuth={setAuth} />
-
+        {isAuthenticated ? null : <LoginHeader />}
         <Switch>
-          <Route path='/' exact component={() => <Products />} />
-          <Route path='/iphone' exact component={() => <Iphone />} />
-          <Route path='/ipad' exact component={() => <Ipad />} />
-          <Route path='/mac' exact component={() => <Mac />} />
+          <Route
+            path='/'
+            exact
+            component={() => <Products isAuthenticated={isAuthenticated} />}
+          />
+          <Route
+            path='/iphone'
+            exact
+            component={() => <Iphone isAuthenticated={isAuthenticated} />}
+          />
+          <Route
+            path='/ipad'
+            exact
+            component={() => <Ipad />}
+            isAuthenticated={isAuthenticated}
+          />
+          <Route
+            path='/mac'
+            exact
+            component={() => <Mac />}
+            isAuthenticated={isAuthenticated}
+          />
           <Route
             path='/login'
             exact
@@ -83,6 +131,7 @@ function App() {
                 <Cart
                   {...props}
                   setAuth={setAuth}
+                  loadCart={loadCart}
                   isAuthenticated={isAuthenticated}
                 />
               ) : (
@@ -93,7 +142,9 @@ function App() {
           <Route
             path='/:id'
             exact
-            component={(props) => <ProductInfo {...props} />}
+            component={(props) => (
+              <ProductInfo {...props} isAuthenticated={isAuthenticated} />
+            )}
           />
         </Switch>
       </Router>
