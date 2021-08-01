@@ -1,11 +1,7 @@
 import { Fragment, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
-import {
-  setCartFalse,
-  setCartTrue,
-  selectInCart,
-} from "../../features/inCartSlice";
+import { setCartFalse, setCartTrue } from "../../features/inCartSlice";
 import "../Products/products.css";
 
 const ProductInfo = ({ match, isAuthenticated }) => {
@@ -22,7 +18,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
     };
     getProduct();
     console.log(product);
-  }, [match.params.id]);
+  }, [match.params.id, product]);
 
   const addToCart = (id) => {
     dispatch(setCartTrue());

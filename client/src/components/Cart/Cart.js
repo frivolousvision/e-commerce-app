@@ -57,7 +57,10 @@ const Cart = (props) => {
   };
   //Get total cost of cart
   const getCartTotal = () => {
-    return fetch(`/carttotal`).then((res) => res.json());
+    return fetch(`/carttotal`, {
+      method: "GET",
+      headers: { token: localStorage.token },
+    }).then((res) => res.json());
   };
   const logout = (e) => {
     e.preventDefault();

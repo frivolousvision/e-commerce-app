@@ -5,8 +5,8 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCartCount, setCartCount } from "./features/cartCountSlice";
+import { useDispatch } from "react-redux";
+import { setCartCount } from "./features/cartCountSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,7 +28,6 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const dispatch = useDispatch();
-  const cartCount = useSelector(selectCartCount);
 
   const setAuth = (boolean) => {
     setIsAuthenticated(boolean);
@@ -51,14 +50,16 @@ function App() {
       if (!localStorage.token) {
         return dispatch(setCartCount(0));
       }
-      return fetch("/count", {
-        method: "GET",
-        headers: { token: localStorage.token },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          return dispatch(setCartCount(res[0].count));
-        });
+      if (localStorage.token) {
+        fetch("/count", {
+          method: "GET",
+          headers: { token: localStorage.token },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            return dispatch(setCartCount(res[0].count));
+          });
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -92,14 +93,12 @@ function App() {
           <Route
             path='/ipad'
             exact
-            component={() => <Ipad />}
-            isAuthenticated={isAuthenticated}
+            component={() => <Ipad isAuthenticated={isAuthenticated} />}
           />
           <Route
             path='/mac'
             exact
-            component={() => <Mac />}
-            isAuthenticated={isAuthenticated}
+            component={() => <Mac isAuthenticated={isAuthenticated} />}
           />
           <Route
             path='/login'

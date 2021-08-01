@@ -60,11 +60,13 @@ button:hover {
 .remove-from-cart-button {
   margin-left: 0.2rem;
 }
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 @media only screen and (max-width: 600px) {
   .buttons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 80%;
   }
 }

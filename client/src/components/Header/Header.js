@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCartCount, setCartCount } from "../../features/cartCountSlice";
+import React from "react";
+import { useSelector } from "react-redux";
+import { selectCartCount } from "../../features/cartCountSlice";
 import "./header.css";
 import { Link } from "react-router-dom";
 import appleLogo from "./apple-white.png";
@@ -9,17 +9,15 @@ import { faBars, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 
 const Header = (props) => {
-  //Redux Variables
-  const dispatch = useDispatch();
   const cartCount = useSelector(selectCartCount);
 
   //Fetches total items in cart
-  const loadCart = () => {
-    return fetch("/count", {
-      method: "GET",
-      headers: { token: localStorage.token },
-    }).then((res) => res.json());
-  };
+  // const loadCart = () => {
+  //   return fetch("/count", {
+  //     method: "GET",
+  //     headers: { token: localStorage.token },
+  //   }).then((res) => res.json());
+  // };
 
   //Renders total items in cart
   // useEffect(() => {
@@ -73,6 +71,13 @@ const Header = (props) => {
           <Link to='/mac'>
             <ul>MacBook</ul>
           </Link>
+          {!props.isAuthenticated ? (
+            <Link to='/login'>
+              <ul>Login</ul>
+            </Link>
+          ) : (
+            <ul onClick={logout}>Logout</ul>
+          )}
           <Link to='/cart'>
             <ul>Cart ({cartCount})</ul>
           </Link>
