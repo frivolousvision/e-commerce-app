@@ -1,17 +1,39 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
 
 .cart-total {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Open Sans", sans-serif;
   text-align: center;
-  margin: 3rem;
   font-size: 1.3rem;
   color: white;
+  background-color: rgb(41, 41, 41);
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 2px white;
+  width: 14rem;
+  height: 4rem;
+}
+.checkout-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  font-size: 1.3rem;
+  color: white;
+  background-color: green;
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 2px white;
+  width: 14rem;
+  max-width: 15rem;
+  height: 4rem;
 }
 .cart-total-container {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(41, 41, 41);
   height: 5rem;
   width: 12rem;
   position: fixed;
@@ -19,8 +41,7 @@
   right: 0;
   bottom: 8vh;
   margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0.5px 0.5px 2px white;
+  width: 50%;
 }
 
 .empty-cart {

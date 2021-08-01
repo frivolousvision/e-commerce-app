@@ -73,9 +73,15 @@ const Cart = (props) => {
 
   return (
     <Fragment>
-      <div className='top'></div>
-      <div className='cart-total-container'>
-        <p className='cart-total'>Cart total: ${total ? total : 0}</p>
+      <div className='top'>
+        <div className='cart-total-container'>
+          <div className=''>
+            <p className='cart-total'>Cart total:${total ? total : 0}</p>
+          </div>
+          <div className='checkout-button'>
+            <p className=''>Checkout</p>
+          </div>
+        </div>
       </div>
       <div className='product-list'>
         {cart.length ? (
