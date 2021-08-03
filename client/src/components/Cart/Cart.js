@@ -11,32 +11,6 @@ const Cart = (props) => {
   const [total, setTotal] = useState();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const getCart = () => {
-      return fetch("/api/cart", {
-        method: "GET",
-        headers: { token: localStorage.token },
-      }).then((res) => res.json());
-    };
-    let mounted = true;
-    try {
-      getCart().then((res) => {
-        if (mounted) {
-          setCart(res);
-        }
-      });
-    } catch (err) {
-      console.error(err.message);
-    }
-
-    getCartTotal().then((res) => {
-      if (mounted) {
-        setTotal(res[0].sum);
-      }
-    });
-    return () => (mounted = false);
-  }, []);
-
   //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     let count;
@@ -48,28 +22,73 @@ const Cart = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        // console.log(res);
         total = res.total;
         count = res.count;
       })
       .then((res) => dispatch(setCartCount(count[0].count)))
       .then((res) => setTotal(total[0].sum));
   };
-  //Get total cost of cart
-  const getCartTotal = () => {
-    return fetch(`/carttotal`, {
-      method: "GET",
-      headers: { token: localStorage.token },
-    }).then((res) => res.json());
-  };
+
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
     props.setAuth(false);
     props.loadCart();
     toast.success("You logged out successfully");
-    console.log(props.isAuthenticated);
+    dispatch(setCartCount(0));
   };
+
+  const getCart = () => {
+    if (localStorage.cart) {
+      try {
+        let count;
+        let total;
+        let product;
+        return fetch("/api/guest-cart", {
+          method: "GET",
+          headers: { token: localStorage.token, cart: localStorage.cart },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            product = res.product;
+            count = res.count;
+            total = res.total;
+          })
+          .then((res) => setCart(product))
+          .then((res) => dispatch(setCartCount(count[0].count)))
+          .then((res) => setTotal(total[0].sum))
+          .then(localStorage.removeItem("cart"));
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+    if (!localStorage.cart) {
+      try {
+        let count;
+        let total;
+        let product;
+        return fetch("/api/user-cart", {
+          method: "GET",
+          headers: { token: localStorage.token },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            product = res.product;
+            count = res.count;
+            total = res.total;
+          })
+          .then((res) => setCart(product))
+          .then((res) => dispatch(setCartCount(count[0].count)))
+          .then((res) => setTotal(total[0].sum));
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCart();
+  }, []);
 
   return (
     <Fragment>

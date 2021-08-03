@@ -48,7 +48,7 @@ function App() {
   const loadCart = () => {
     try {
       if (!localStorage.token) {
-        return dispatch(setCartCount(0));
+        return dispatch(setCartCount(JSON.parse(localStorage.cart).length));
       }
       if (localStorage.token) {
         fetch("/count", {
@@ -59,6 +59,8 @@ function App() {
           .then((res) => {
             return dispatch(setCartCount(res[0].count));
           });
+      } else {
+        return;
       }
     } catch (err) {
       console.error(err.message);
@@ -72,13 +74,12 @@ function App() {
       loadCart();
       return () => (mounted = false);
     }
-  }, [dispatch, localStorage.token]);
+  }, [dispatch, localStorage.token, localStorage.cart]);
 
   return (
     <Fragment>
       <Router>
         <Header isAuthenticated={isAuthenticated} setAuth={setAuth} />
-        {isAuthenticated ? null : <LoginHeader />}
         <Switch>
           <Route
             path='/'

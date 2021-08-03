@@ -18,7 +18,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
     };
     getProduct();
     console.log(product);
-  }, [match.params.id, product]);
+  }, []);
 
   const addToCart = (id) => {
     dispatch(setCartTrue());
