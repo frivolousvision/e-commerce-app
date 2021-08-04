@@ -8,24 +8,24 @@ import "./homePage.css";
 const HomePage = () => {
   return (
     <div className='home-container'>
-      <Link to='/iphone'>
-        <div className='image-container'>
+      <div className='image-container'>
+        <Link to='/iphone'>
           <img src={iphones} />
           <p className='icon-title'>iPhone</p>
-        </div>
-      </Link>
-      <Link to='/mac'>
-        <div className='image-container'>
+        </Link>
+      </div>
+      <div className='image-container'>
+        <Link to='/mac'>
           <img src={macbooks} />
           <p className='icon-title'>Macbook</p>
-        </div>
-      </Link>
-      <Link to='/ipad'>
-        <div className='image-container'>
+        </Link>
+      </div>
+      <div className='image-container'>
+        <Link to='/ipad'>
           <img src={ipads} />
           <p className='icon-title'>iPad</p>
-        </div>
-      </Link>
+        </Link>
+      </div>
     </div>
   );
 };
