@@ -1,0 +1,33 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 5rem;
+}
+.home-container img {
+  width: 100%;
+  height: auto;
+}
+.image-container {
+  position: relative;
+  margin-top: 3rem;
+}
+.icon-title {
+  font-size: 3rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -132%);
+  color: white;
+  text-shadow: 1px 2px 4px black;
+}
+@media only screen and (max-width: 800px) {
+  .home-container {
+    width: 100%;
+  }
+  .icon-title {
+    font-size: 2rem;
+    transform: translate(-50%, -140%);
+  }
+}

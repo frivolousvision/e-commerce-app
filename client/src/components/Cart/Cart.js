@@ -98,7 +98,9 @@ const Cart = (props) => {
             <p className='cart-total'>Cart total:${total ? total : 0}</p>
           </div>
           <div className='checkout-button'>
-            <p className=''>Checkout</p>
+            <Link to='/checkout'>
+              <p className=''>Checkout</p>
+            </Link>
           </div>
         </div>
       </div>

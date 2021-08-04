@@ -11,28 +11,6 @@ import { toast } from "react-toastify";
 const Header = (props) => {
   const cartCount = useSelector(selectCartCount);
 
-  //Fetches total items in cart
-  // const loadCart = () => {
-  //   return fetch("/count", {
-  //     method: "GET",
-  //     headers: { token: localStorage.token },
-  //   }).then((res) => res.json());
-  // };
-
-  //Renders total items in cart
-  // useEffect(() => {
-  // let mounted = true;
-  // loadCart().then((res) => {
-  // if (!localStorage.token) {
-  // return dispatch(setCartCount(0));
-  // }
-  // if (mounted) {
-  // dispatch(setCartCount(res[0].count));
-  // }
-  // });
-  // return () => (mounted = false);
-  // }, [dispatch]);
-
   const showSidebar = () => {
     const sidebar = document.getElementsByClassName("sidebar")[0];
     const sidebarContent =

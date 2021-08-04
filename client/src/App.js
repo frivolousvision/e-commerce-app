@@ -20,7 +20,8 @@ import ProductInfo from "./components/ProductInfo/ProductInfo";
 import Cart from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
-import LoginHeader from "./components/LoginHeader/LoginHeader";
+import Checkout from "./components/Checkout/Checkout";
+import HomePage from "./components/HomePage/HomePage";
 
 toast.configure();
 
@@ -81,8 +82,9 @@ function App() {
       <Router>
         <Header isAuthenticated={isAuthenticated} setAuth={setAuth} />
         <Switch>
+          <Route path='/' exact component={() => <HomePage />} />
           <Route
-            path='/'
+            path='/products'
             exact
             component={() => <Products isAuthenticated={isAuthenticated} />}
           />
@@ -137,6 +139,13 @@ function App() {
               ) : (
                 <Redirect to='/login' />
               )
+            }
+          />
+          <Route
+            path='/checkout'
+            exact
+            render={(props) =>
+              isAuthenticated ? <Checkout /> : <Redirect to='login' />
             }
           />
           <Route
