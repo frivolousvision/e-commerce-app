@@ -15,9 +15,7 @@
   margin-top: 3rem;
   cursor: pointer;
 }
-.image-container img:hover {
-  opacity: 90%;
-}
+
 .icon-title {
   font-size: 3rem;
   position: absolute;
@@ -35,5 +33,10 @@
   .icon-title {
     font-size: 2rem;
     transform: translate(-50%, -140%);
+  }
+}
+@media only screen and (min-width: 1000px) {
+  .image-container img:hover {
+    opacity: 90%;
   }
 }
