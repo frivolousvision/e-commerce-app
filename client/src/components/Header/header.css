@@ -8,7 +8,7 @@
   align-items: center;
   box-shadow: 3px 0px 1px black;
   position: fixed;
-  z-index: 30;
+  z-index: 10;
   top: 0;
 }
 .header-list {
@@ -52,7 +52,7 @@ a:hover {
     box-shadow: 3px 0px 1px black;
     position: fixed;
     top: 0;
-    z-index: 15;
+    z-index: 10;
   }
   .mobile-header-list {
     background-color: rgb(41, 41, 41);
@@ -72,7 +72,7 @@ a:hover {
   .sidebar {
     background-color: rgb(41, 41, 41);
     height: 100%;
-    z-index: 30;
+    z-index: 10;
     position: fixed;
     width: 0;
     top: 0;
