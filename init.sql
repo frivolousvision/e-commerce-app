@@ -114,11 +114,15 @@ CREATE TABLE users_products_cart (
     PRIMARY KEY (user_id, product_id)
 );
 
-INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4');
+INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4') RETURNING *;
 INSERT INTO users_products_cart VALUES ( 'd16dee11-5548-4dfe-8d6c-034907e789e1', '4');
 INSERT INTO users_products_cart VALUES ( '7360be7b-35ae-4f88-954b-ae43204e0658', '4');
 INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '6');
 INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '7');
+
+
+INSERT INTO users_products_cart VALUES ('7360be7b-35ae-4f88-954b-ae43204e0658', '6') RETURNING *;
+
 
 SELECT users.user_email AS user_email, products.name AS product_name, products.price AS price
 FROM users, products, users_products_cart
