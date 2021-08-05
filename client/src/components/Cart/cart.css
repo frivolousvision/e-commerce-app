@@ -1,17 +1,47 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
 
 .cart-total {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Open Sans", sans-serif;
   text-align: center;
-  margin: 3rem;
   font-size: 1.3rem;
+  color: white;
+  background-color: rgb(41, 41, 41);
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 2px white;
+  width: 14rem;
+  height: 4rem;
+}
+.checkout-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  font-size: 1.3rem;
+  color: white;
+  background-color: green;
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 2px white;
+  width: 14rem;
+  max-width: 15rem;
+  height: 4rem;
+  text-decoration: none;
+}
+.checkout-button:hover {
+  background-color: rgb(6, 173, 6);
+}
+.checkout-button a {
+  text-decoration: none;
   color: white;
 }
 .cart-total-container {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgb(41, 41, 41);
   height: 5rem;
   width: 12rem;
   position: fixed;
@@ -19,8 +49,7 @@
   right: 0;
   bottom: 8vh;
   margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0.5px 0.5px 2px white;
+  width: 50%;
 }
 
 .empty-cart {
@@ -39,4 +68,30 @@
 }
 .removed-from-cart {
   background-color: rgb(179, 33, 33);
+}
+.logout-container {
+  display: flex;
+  justify-content: center;
+}
+.logout-button {
+  background-color: red;
+}
+.logout-button:hover {
+  background-color: rgb(156, 6, 6);
+  cursor: pointer;
+}
+@media only screen and (max-width: 600px) {
+  .cart-total-container {
+    width: 90%;
+  }
+  .remove-from-cart-button {
+    width: 100%;
+  }
+  .logout-container {
+    width: 100%;
+  }
+  .logout-button {
+    width: 90%;
+    margin-bottom: 1rem;
+  }
 }

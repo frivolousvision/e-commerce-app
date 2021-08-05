@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap");
+* {
+  font-family: "Open Sans", sans-serif;
+}
+input {
+  margin: 0;
+  padding: 0;
+}
+.login-header {
+  margin-top: 6rem;
+  text-align: center;
+}
+.register-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 500px;
+  min-width: 400px;
+  margin: 0 auto;
+}
+.email-input {
+  width: 99%;
+  font-size: 1.2rem;
+}
+.password-input {
+  width: 99%;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+.name-input {
+  width: 99%;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+}
+.submit-button {
+  width: 100%;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+.submit-button:hover {
+  background-color: rgb(50, 168, 40);
+}
+.login-link {
+  color: black;
+  cursor: pointer;
+}
+.login-link:hover {
+  color: rgb(50, 168, 40);
+}
+@media only screen and (max-width: 600px) {
+  .register-container {
+    width: 75%;
+    min-width: 250px;
+    border: 1px soild red;
+  }
+}

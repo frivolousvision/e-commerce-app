@@ -3,18 +3,36 @@ import { Link } from "react-router-dom";
 import { setCartCount } from "../../features/cartCountSlice";
 import { setCartTrue } from "../../features/inCartSlice";
 import { useDispatch } from "react-redux";
+import "./product.css";
 
 const Product = (props) => {
   //Redux Variable
   const dispatch = useDispatch();
   const [button, setButton] = useState();
 
-  //Set "in_cart" to true in db, updates item count in cart
   const addToCart = (id) => {
-    dispatch(setCartTrue());
-    fetch(`/addtocart/${id}`)
-      .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)));
+    let localStorageCart = [];
+    //If user isn't logged in, add items in local storage to cart
+    if (!localStorage.token) {
+      const item = {
+        product_id: props.product.product_id,
+      };
+      localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+      localStorageCart.push(item);
+      localStorage.setItem("cart", JSON.stringify(localStorageCart));
+      dispatch(setCartCount(JSON.parse(localStorage.cart).length));
+    }
+    //If user is logged in
+    if (localStorage.token) {
+      dispatch(setCartTrue());
+      fetch(`/addtocart/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      })
+        .then((res) => res.json())
+
+        .then((res) => dispatch(setCartCount(res[0].count)));
+    }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
   };
@@ -28,13 +46,18 @@ const Product = (props) => {
       <h3 className='description'>{props.product.description}</h3>
       <h2 className='price'>${props.product.price}</h2>
       <div className='buttons'>
+        {/* {props.isAuthenticated ? ( */}
         {button ? (
-          <button className='add-to-cart-action'>Added to cart!</button>
+          <button className='add-to-cart-action buttons'>Added to cart!</button>
         ) : (
-          <button onClick={() => addToCart(props.product.product_id)}>
+          <button
+            className='buttons'
+            onClick={() => addToCart(props.product.product_id)}
+          >
             Add to cart
           </button>
         )}
+        {/* ) : null} */}
       </div>
     </div>
   );

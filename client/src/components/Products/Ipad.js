@@ -5,6 +5,7 @@ import "./products.css";
 
 const Ipad = (props) => {
   const [items, setItems] = useState("");
+
   useEffect(() => {
     let mounted = true;
     getIpads().then((res) => {
@@ -24,7 +25,11 @@ const Ipad = (props) => {
       <div className='product-list'>
         {items ? (
           items.map((product, index) => (
-            <Product product={product} key={index} />
+            <Product
+              product={product}
+              key={index}
+              isAuthenticated={props.isAuthenticated}
+            />
           ))
         ) : (
           <p>Loading...</p>

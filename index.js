@@ -5,9 +5,16 @@ const pool = require("./db");
 const query = require("express");
 const PORT = process.env.PORT || 5000;
 const path = require("path");
+const authorization = require("./middleware/authorization");
 
 app.use(cors());
 app.use(express.json());
+
+//Register and Login Routes
+app.use("/auth", require("./routes/jwtAuth"));
+
+//Dashboard Route
+app.use("/dashboard", require("./routes/dashboard"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
@@ -16,20 +23,67 @@ if (process.env.NODE_ENV === "production") {
 //GET ROUTES//
 
 //GET CART ITEMS
-app.get("/api/cart", async (req, res) => {
+app.get("/api/guest-cart", authorization, async (req, res) => {
   try {
-    const products = await pool.query(
-      "SELECT * FROM products WHERE in_cart = 'true'"
+    JSONcart = JSON.parse(req.header("cart"));
+
+    for (let i = 0; i < JSONcart.length; i++) {
+      const inserts = await pool.query(
+        "INSERT INTO users_products_cart VALUES ( $1, $2) RETURNING *",
+        [req.user, JSONcart[i].product_id]
+      );
+    }
+
+    const total = await pool.query(
+      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
-    res.json(products.rows);
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
+    );
+    const products = await pool.query(
+      "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
+    );
+    res.json({
+      product: products.rows,
+      total: total.rows,
+      count: count.rows,
+    });
   } catch (err) {
     console.error(err.message);
   }
 });
-app.get("/carttotal", async (req, res) => {
+app.get("/api/user-cart", authorization, async (req, res) => {
   try {
     const products = await pool.query(
-      "SELECT SUM(price) FROM products WHERE in_cart = 'true'"
+      "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
+    );
+    const total = await pool.query(
+      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
+    );
+    const count = await pool.query(
+      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
+    );
+    res.json({
+      product: products.rows,
+      total: total.rows,
+      count: count.rows,
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.get("/carttotal", authorization, async (req, res) => {
+  try {
+    const products = await pool.query(
+      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     res.json(products.rows);
   } catch (err) {
@@ -37,17 +91,18 @@ app.get("/carttotal", async (req, res) => {
   }
 });
 //COUNT CART ITEMS
-app.get("/count", async (req, res) => {
+app.get("/count", authorization, async (req, res) => {
   try {
     const count = await pool.query(
-      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
+      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     res.json(count.rows);
   } catch (err) {
     console.error(err.message);
   }
 });
-
+//GET PRODUCTS FROM products DB
 app.get("/api/products", async (req, res) => {
   try {
     const products = await pool.query(
@@ -104,16 +159,17 @@ app.get("/api/:id", async (req, res) => {
   }
 });
 
-//PUT ROUTES// Why aren't these puts!??
-app.get("/addtocart/:id", async (req, res) => {
+//Add to cart and remove from cart
+app.get("/addtocart/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
     const addToCart = await pool.query(
-      "UPDATE products SET in_cart = 'true' WHERE product_id = $1",
-      [id]
+      "INSERT INTO users_products_cart VALUES ($1, $2)",
+      [req.user, id]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
+      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     res.send(count.rows);
     console.log("Added to cart");
@@ -122,24 +178,30 @@ app.get("/addtocart/:id", async (req, res) => {
   }
 });
 
-app.get("/removefromcart/:id", async (req, res) => {
+app.get("/removefromcart/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
     const removeFromCart = await pool.query(
-      "UPDATE products SET in_cart = 'false' WHERE product_id = $1",
-      [id]
+      "DELETE FROM users_products_cart USING products, users WHERE products.product_id = $1 AND users_products_cart.user_id = $2 AND products.product_id = users_products_cart.product_id;",
+      [id, req.user]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM products WHERE in_cart = 'true'"
+      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     const total = await pool.query(
-      "SELECT SUM(price) FROM products WHERE in_cart = 'true'"
+      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      [req.user]
     );
     res.send({ count: count.rows, total: total.rows });
     console.log("Removed from cart");
   } catch (err) {
     console.log(err.message);
   }
+});
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
 });
 
 app.listen(PORT, console.log(`Server is running on ${PORT}`));
