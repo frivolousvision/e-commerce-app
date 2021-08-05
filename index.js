@@ -1,11 +1,12 @@
 const express = require("express");
+require("dotenv").config();
 const app = express();
 const cors = require("cors");
 const pool = require("./db");
-const query = require("express");
 const PORT = process.env.PORT || 5000;
 const path = require("path");
 const authorization = require("./middleware/authorization");
+const stripe = require("stripe")(process.env.sk);
 
 app.use(cors());
 app.use(express.json());
@@ -15,6 +16,9 @@ app.use("/auth", require("./routes/jwtAuth"));
 
 //Dashboard Route
 app.use("/dashboard", require("./routes/dashboard"));
+
+//Checkout Route
+app.use("/checkout", require("./routes/checkout"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
@@ -26,7 +30,7 @@ if (process.env.NODE_ENV === "production") {
 app.get("/api/guest-cart", authorization, async (req, res) => {
   try {
     JSONcart = JSON.parse(req.header("cart"));
-
+    console.log(req);
     for (let i = 0; i < JSONcart.length; i++) {
       const inserts = await pool.query(
         "INSERT INTO users_products_cart VALUES ( $1, $2) RETURNING *",
