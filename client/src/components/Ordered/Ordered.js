@@ -9,7 +9,7 @@ const Ordered = () => {
   const [products, setProducts] = useState(null);
 
   const getOrdered = () => {
-    fetch("http://localhost:5000/ordered", {
+    fetch("/ordered", {
       method: "GET",
       headers: { token: localStorage.token },
     })

@@ -71,7 +71,7 @@ const Checkout = () => {
   };
   const getUser = () => {
     try {
-      fetch("http://localhost:5000/api/user", {
+      fetch("/api/user", {
         method: "GET",
         headers: { token: localStorage.token },
       })
@@ -83,7 +83,7 @@ const Checkout = () => {
   };
 
   const cartToOrder = () => {
-    fetch("http://localhost:5000/cart-to-ordered", {
+    fetch("/cart-to-ordered", {
       method: "GET",
       headers: { token: localStorage.token },
     });
