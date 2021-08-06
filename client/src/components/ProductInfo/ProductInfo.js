@@ -41,7 +41,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
       })
         .then((res) => res.json())
 
-        .then((res) => dispatch(setCartCount(res[0].count)));
+        .then((res) => dispatch(setCartCount(res[0].sum)));
     }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
@@ -57,7 +57,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
       .then((res) => {
         count = res.count;
       })
-      .then((res) => dispatch(setCartCount(count[0].count)));
+      .then((res) => dispatch(setCartCount(count[0].sum)));
   };
 
   return (

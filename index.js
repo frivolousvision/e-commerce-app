@@ -181,12 +181,10 @@ app.get("/addtocart/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
     const addToCart = await pool.query(
-      // "INSERT INTO users_products_cart VALUES ($1, $2)",
       "INSERT INTO users_products_cart VALUES ( $1, $2, '1') ON CONFLICT ON CONSTRAINT users_products_cart_pkey DO UPDATE SET quantity = users_products_cart.quantity + 1 WHERE users_products_cart.product_id = $2;",
       [req.user, id]
     );
     const count = await pool.query(
-      // "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
