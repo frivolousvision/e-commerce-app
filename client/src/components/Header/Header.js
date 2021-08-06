@@ -1,6 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectCartCount } from "../../features/cartCountSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCartCount, setCartCount } from "../../features/cartCountSlice";
 import "./header.css";
 import { Link } from "react-router-dom";
 import appleLogo from "./apple-white.png";
@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 const Header = (props) => {
   const cartCount = useSelector(selectCartCount);
+  const dispatch = useDispatch();
 
   const showSidebar = () => {
     const sidebar = document.getElementsByClassName("sidebar")[0];
@@ -28,9 +29,11 @@ const Header = (props) => {
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
     props.setAuth(false);
     toast.success("You logged out successfully");
     hideSidebar();
+    dispatch(setCartCount(0));
   };
 
   return (

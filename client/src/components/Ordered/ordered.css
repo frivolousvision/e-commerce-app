@@ -1,0 +1,11 @@
+.ordered-container {
+  margin-top: 6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.ordered-container a {
+  color: black;
+}

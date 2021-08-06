@@ -1,0 +1,16 @@
+.message-container {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+}
+.message-container a {
+  color: black;
+}
+.message-container a:hover {
+  color: green;
+}

@@ -113,6 +113,29 @@ CREATE TABLE users_products_cart (
     product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, product_id)
 );
+CREATE TABLE users_products_ordered (
+    user_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, product_id)
+);
+---TESTS 2----
+CREATE TABLE users_products_cart (
+    user_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
+    product_id_unique SERIAL,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id, product_id_unique)
+);
+CREATE TABLE users_products_ordered (
+    user_id uuid REFERENCES users(user_id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
+    PRIMARY KEY (user_id)
+);
+
+INSERT INTO users_products_ordered (user_id, product_id)
+SELECT user_id, product_id
+FROM users_products_cart
+WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
+
 
 INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '4') RETURNING *;
 INSERT INTO users_products_cart VALUES ( 'd16dee11-5548-4dfe-8d6c-034907e789e1', '4');
@@ -122,12 +145,20 @@ INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90',
 
 
 INSERT INTO users_products_cart VALUES ('7360be7b-35ae-4f88-954b-ae43204e0658', '6') RETURNING *;
+DELETE FROM users_products_cart WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
+DELETE FROM users_products_ordered WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
 
 
 SELECT users.user_email AS user_email, products.name AS product_name, products.price AS price
 FROM users, products, users_products_cart
 WHERE users_products_cart.user_id = 'f91b3e18-9d5b-4380-acc5-528802addd90'
 AND users.user_id = users_products_cart.user_id 
+AND products.product_id = users_products_cart.product_id;
+
+SELECT users.user_name AS user_name, products.name AS product_name, products.price AS price, products.img_url AS img_url
+FROM users, products, users_products_ordered
+WHERE users_products_cart.user_id = $1
+AND users.user_id = users_products_ordered.user_id 
 AND products.product_id = users_products_cart.product_id;
 
 SELECT COUNT(*)

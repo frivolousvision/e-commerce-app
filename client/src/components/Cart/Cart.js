@@ -93,6 +93,7 @@ const Cart = (props) => {
   return (
     <Fragment>
       <div className='top'>
+        <Link to='/ordered'>Order History</Link>
         <div className='cart-total-container'>
           <div className=''>
             <p className='cart-total'>Cart total:${total ? total : 0}</p>
