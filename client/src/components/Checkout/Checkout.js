@@ -52,7 +52,7 @@ const Checkout = () => {
       let count;
       let total;
       let product;
-      return fetch("http://localhost:5000/api/user-cart", {
+      return fetch("/api/user-cart", {
         method: "GET",
         headers: { token: localStorage.token },
       })
