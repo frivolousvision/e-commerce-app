@@ -37,6 +37,6 @@
 }
 @media only screen and (min-width: 1000px) {
   .image-container img:hover {
-    opacity: 90%;
+    opacity: 0.9;
   }
 }

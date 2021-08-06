@@ -21,13 +21,28 @@ const ProductInfo = ({ match, isAuthenticated }) => {
   }, []);
 
   const addToCart = (id) => {
-    dispatch(setCartTrue());
-    fetch(`/addtocart/${id}`, {
-      method: "GET",
-      headers: { token: localStorage.token },
-    })
-      .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)));
+    let localStorageCart = [];
+    //If user isn't logged in, add items in local storage to cart
+    if (!localStorage.token) {
+      const item = {
+        product_id: product.product_id,
+      };
+      localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
+      localStorageCart.push(item);
+      localStorage.setItem("cart", JSON.stringify(localStorageCart));
+      dispatch(setCartCount(JSON.parse(localStorage.cart).length));
+    }
+    //If user is logged in
+    if (localStorage.token) {
+      dispatch(setCartTrue());
+      fetch(`/addtocart/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      })
+        .then((res) => res.json())
+
+        .then((res) => dispatch(setCartCount(res[0].count)));
+    }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
   };
@@ -57,21 +72,18 @@ const ProductInfo = ({ match, isAuthenticated }) => {
               <h3>{productInfo.description}</h3>
               <h2>${productInfo.price}</h2>
               <div className='buttons'>
-                {isAuthenticated ? (
-                  button ? (
-                    <button className='add-to-cart-action buttons'>
-                      Added to cart!
-                    </button>
-                  ) : (
-                    <button
-                      className='buttons'
-                      onClick={() => addToCart(product.product_id)}
-                    >
-                      Add to cart
-                    </button>
-                  )
-                ) : null}
-
+                {button ? (
+                  <button className='add-to-cart-action buttons'>
+                    Added to cart!
+                  </button>
+                ) : (
+                  <button
+                    className='buttons'
+                    onClick={() => addToCart(product.product_id)}
+                  >
+                    Add to cart
+                  </button>
+                )}
                 {/* {inCart ? (
                   <button
                     className='remove-from-cart-button'
