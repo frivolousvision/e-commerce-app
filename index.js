@@ -18,7 +18,10 @@ app.use("/auth", require("./routes/jwtAuth"));
 app.use("/dashboard", require("./routes/dashboard"));
 
 //Checkout Route
-app.use("/checkout", require("./routes/checkout"));
+app.use("/", require("./routes/checkout"));
+
+//Ordered Route
+app.use("/", require("./routes/ordered"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));
@@ -26,6 +29,17 @@ if (process.env.NODE_ENV === "production") {
 
 //GET ROUTES//
 
+//USER INFO
+app.get("/api/user", authorization, async (req, res) => {
+  try {
+    const user = await pool.query("SELECT * FROM users WHERE user_id = $1", [
+      req.user,
+    ]);
+    res.json(user.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 //GET CART ITEMS
 app.get("/api/guest-cart", authorization, async (req, res) => {
   try {

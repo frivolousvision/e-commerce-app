@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { setCartCount } from "./features/cartCountSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 //Components
 import Header from "./components/Header/Header";
@@ -22,8 +24,14 @@ import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import Checkout from "./components/Checkout/Checkout";
 import HomePage from "./components/HomePage/HomePage";
+import Ordered from "./components/Ordered/Ordered";
+import Disclaimer from "./components/Disclaimer/Disclaimer";
 
 toast.configure();
+
+const stripePromise = loadStripe(
+  "pk_test_51Iv1zIJ8hAWttu63e1gQb89JlY7yHoPI0So6GfQS9RiI87ltv6Q2dCLxkvOBFscnzEI31pHYw9YvZdyG7ziNGApG00jUejxDf9"
+);
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,95 +87,124 @@ function App() {
 
   return (
     <Fragment>
-      <Router>
-        <Header isAuthenticated={isAuthenticated} setAuth={setAuth} />
-        <Switch>
-          <Route path='/' exact component={() => <HomePage />} />
-          <Route
-            path='/products'
-            exact
-            component={() => <Products isAuthenticated={isAuthenticated} />}
+      <Elements stripe={stripePromise}>
+        <Router>
+          <Header
+            isAuthenticated={isAuthenticated}
+            setAuth={setAuth}
+            loadCart={loadCart}
           />
-          <Route
-            path='/iphone'
-            exact
-            component={() => <Iphone isAuthenticated={isAuthenticated} />}
-          />
-          <Route
-            path='/ipad'
-            exact
-            component={() => <Ipad isAuthenticated={isAuthenticated} />}
-          />
-          <Route
-            path='/mac'
-            exact
-            component={() => <Mac isAuthenticated={isAuthenticated} />}
-          />
-          <Route
-            path='/login'
-            exact
-            render={(props) =>
-              !isAuthenticated ? (
-                <Login {...props} setAuth={setAuth} />
-              ) : (
-                <Redirect to='/cart' />
-              )
-            }
-          />
-          <Route
-            path='/register'
-            exact
-            render={(props) =>
-              !isAuthenticated ? (
-                <Register {...props} setAuth={setAuth} />
-              ) : (
-                <Redirect to='/cart' />
-              )
-            }
-          />
-          <Route
-            path='/cart'
-            exact
-            render={(props) =>
-              isAuthenticated ? (
-                <Cart
-                  {...props}
-                  setAuth={setAuth}
-                  loadCart={loadCart}
-                  isAuthenticated={isAuthenticated}
-                />
-              ) : (
-                <Redirect to='/login' />
-              )
-            }
-          />
-          <Route
-            path='/checkout'
-            exact
-            render={(props) =>
-              isAuthenticated ? <Checkout /> : <Redirect to='login' />
-            }
-          />
-          <Route
-            path='/:id'
-            exact
-            component={(props) => (
-              <ProductInfo {...props} isAuthenticated={isAuthenticated} />
-            )}
-          />
-        </Switch>
-      </Router>
-      <ToastContainer
-        position='top-right'
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+          <Switch>
+            <Route path='/' exact component={() => <HomePage />} />
+            <Route
+              path='/products'
+              exact
+              component={() => <Products isAuthenticated={isAuthenticated} />}
+            />
+            <Route
+              path='/iphone'
+              exact
+              component={() => <Iphone isAuthenticated={isAuthenticated} />}
+            />
+            <Route
+              path='/ipad'
+              exact
+              component={() => <Ipad isAuthenticated={isAuthenticated} />}
+            />
+            <Route
+              path='/mac'
+              exact
+              component={() => <Mac isAuthenticated={isAuthenticated} />}
+            />
+            <Route
+              path='/login'
+              exact
+              render={(props) =>
+                !isAuthenticated ? (
+                  <Login {...props} setAuth={setAuth} />
+                ) : (
+                  <Redirect to='/cart' />
+                )
+              }
+            />
+            <Route
+              path='/register'
+              exact
+              render={(props) =>
+                !isAuthenticated ? (
+                  <Register {...props} setAuth={setAuth} />
+                ) : (
+                  <Redirect to='/cart' />
+                )
+              }
+            />
+            <Route
+              path='/cart'
+              exact
+              render={(props) =>
+                isAuthenticated ? (
+                  <Cart
+                    {...props}
+                    setAuth={setAuth}
+                    loadCart={loadCart}
+                    isAuthenticated={isAuthenticated}
+                  />
+                ) : (
+                  <Redirect to='/disclaimer' />
+                )
+              }
+            />
+            <Route
+              path='/checkout'
+              exact
+              render={(props) =>
+                isAuthenticated ? <Checkout /> : <Redirect to='/disclaimer' />
+              }
+            />
+            <Route
+              path='/ordered'
+              exact
+              render={(props) =>
+                isAuthenticated ? (
+                  <Ordered
+                    {...props}
+                    setAuth={setAuth}
+                    loadCart={loadCart}
+                    isAuthenticated={isAuthenticated}
+                  />
+                ) : (
+                  <Redirect to='/disclaimer' />
+                )
+              }
+            />
+            <Route
+              path='/disclaimer'
+              exact
+              component={(props) => (
+                <Disclaimer {...props} isAuthenticated={isAuthenticated} />
+              )}
+            />
+            <Route
+              path='/:id'
+              exact
+              component={(props) => (
+                <ProductInfo {...props} isAuthenticated={isAuthenticated} />
+              )}
+            />
+          </Switch>
+        </Router>
+        <ToastContainer
+          position='top-right'
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+      </Elements>
     </Fragment>
   );
 }

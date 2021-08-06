@@ -17,7 +17,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
       setProduct(jsonProduct);
     };
     getProduct();
-    console.log(product);
+    // console.log(product);
   }, []);
 
   const addToCart = (id) => {

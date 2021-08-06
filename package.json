@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "server": "nodemon index.js --ignore client",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {

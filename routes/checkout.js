@@ -1,38 +1,41 @@
 const router = require("express").Router();
-const { default: Stripe } = require("stripe");
+require("dotenv").config();
+const stripeKey = process.env.sk;
+const stripe = require("stripe")(stripeKey);
 const pool = require("../db");
 const authorization = require("../middleware/authorization");
 
-router.get("/", authorization, async (req, res) => {
-  const { user } = req.user;
-  const { name, email, product, token } = req.body;
-  const idempontencyKey = uuid();
+router.post("/create-payment-intent", authorization, async (req, res) => {
+  const total = await pool.query(
+    "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+    [req.user]
+  );
+  console.log(total.rows[0].sum);
+  // Create a PaymentIntent with the order amount and currency
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: total.rows[0].sum * 100,
+    currency: "usd",
+  });
+  res.send({
+    clientSecret: paymentIntent.client_secret,
+  });
+});
 
-  return Stripe.customers
-    .create({
-      email: email,
-      source: token.id,
-    })
-    .then((customer) => {
-      Stripe.charges.create(
-        {
-          amount: product.price * 100,
-          currency: "usd",
-          customer: customer.id,
-          receipt_email: token.email,
-          description: product.name,
-          shipping: {
-            name: token.card.name,
-            address: {
-              country: token.card.address_country,
-            },
-          },
-        },
-        { idempontencyKey }
-      );
-    })
-    .then((result) => res.status(200).json(result))
-    .catch((err) => console.log(err));
+router.get("/cart-to-ordered", authorization, async (req, res) => {
+  try {
+    pool.query(
+      "INSERT INTO users_products_ordered (user_id, product_id) SELECT user_id, product_id FROM users_products_cart WHERE user_id = $1;",
+      [req.user]
+    );
+
+    pool.query("DELETE FROM users_products_cart WHERE user_id = $1", [
+      req.user,
+    ]);
+    console.log("success!");
+    res.send("Success");
+  } catch (err) {
+    console.error(err.message);
+  }
 });
 
 module.exports = router;
