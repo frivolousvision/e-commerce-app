@@ -24,7 +24,7 @@ router.post("/create-payment-intent", authorization, async (req, res) => {
 router.get("/cart-to-ordered", authorization, async (req, res) => {
   try {
     pool.query(
-      "INSERT INTO users_products_ordered (user_id, product_id) SELECT user_id, product_id FROM users_products_cart WHERE user_id = $1;",
+      "INSERT INTO users_products_ordered (user_id, product_id, quantity) SELECT user_id, product_id, quantity FROM users_products_cart WHERE user_id = $1;",
       [req.user]
     );
 

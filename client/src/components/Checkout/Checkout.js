@@ -63,7 +63,7 @@ const Checkout = () => {
           total = res.total;
         })
         .then((res) => setCart(product))
-        .then((res) => dispatch(setCartCount(count[0].count)))
+        .then((res) => dispatch(setCartCount(count[0].sum)))
         .then((res) => setTotal(total[0].sum));
     } catch (err) {
       console.error(err.message);
@@ -92,7 +92,6 @@ const Checkout = () => {
   useEffect(() => {
     getCart();
     getUser();
-    console.log(total);
 
     window
       .fetch("/create-payment-intent", {

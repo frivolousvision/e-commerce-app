@@ -59,7 +59,9 @@
 .price {
   margin-top: -0.2rem;
 }
-
+.quantity {
+  margin-top: -0.2rem;
+}
 .product-list {
   margin-bottom: 8rem;
 }

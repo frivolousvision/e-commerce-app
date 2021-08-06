@@ -51,13 +51,12 @@ app.get("/api/guest-cart", authorization, async (req, res) => {
         [req.user, JSONcart[i].product_id]
       );
     }
-
     const total = await pool.query(
-      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url, users_products_cart.quantity AS quantity FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     const products = await pool.query(
@@ -76,15 +75,15 @@ app.get("/api/guest-cart", authorization, async (req, res) => {
 app.get("/api/user-cart", authorization, async (req, res) => {
   try {
     const products = await pool.query(
-      "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url, users_products_cart.quantity AS quantity FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     const total = await pool.query(
-      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(products.price * users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     res.json({
@@ -100,7 +99,7 @@ app.get("/api/user-cart", authorization, async (req, res) => {
 app.get("/carttotal", authorization, async (req, res) => {
   try {
     const products = await pool.query(
-      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(products.price * users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     res.json(products.rows);
@@ -112,7 +111,7 @@ app.get("/carttotal", authorization, async (req, res) => {
 app.get("/count", authorization, async (req, res) => {
   try {
     const count = await pool.query(
-      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     res.json(count.rows);
@@ -182,11 +181,13 @@ app.get("/addtocart/:id", authorization, async (req, res) => {
   try {
     const { id } = req.params;
     const addToCart = await pool.query(
-      "INSERT INTO users_products_cart VALUES ($1, $2)",
+      // "INSERT INTO users_products_cart VALUES ($1, $2)",
+      "INSERT INTO users_products_cart VALUES ( $1, $2, '1') ON CONFLICT ON CONSTRAINT users_products_cart_pkey DO UPDATE SET quantity = users_products_cart.quantity + 1 WHERE users_products_cart.product_id = $2;",
       [req.user, id]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      // "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     res.send(count.rows);
@@ -204,11 +205,12 @@ app.get("/removefromcart/:id", authorization, async (req, res) => {
       [id, req.user]
     );
     const count = await pool.query(
-      "SELECT COUNT(*) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     const total = await pool.query(
-      "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      // "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
+      "SELECT SUM(products.price * users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
     res.send({ count: count.rows, total: total.rows });

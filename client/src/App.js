@@ -66,7 +66,7 @@ function App() {
         })
           .then((res) => res.json())
           .then((res) => {
-            return dispatch(setCartCount(res[0].count));
+            return dispatch(setCartCount(res[0].sum));
           });
       } else {
         return;

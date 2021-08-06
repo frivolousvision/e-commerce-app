@@ -31,7 +31,7 @@ const Product = (props) => {
       })
         .then((res) => res.json())
 
-        .then((res) => dispatch(setCartCount(res[0].count)));
+        .then((res) => dispatch(setCartCount(res[0].sum)));
     }
     setButton(true);
     setTimeout(() => setButton(false), 1000);

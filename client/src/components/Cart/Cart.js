@@ -25,7 +25,7 @@ const Cart = (props) => {
         total = res.total;
         count = res.count;
       })
-      .then((res) => dispatch(setCartCount(count[0].count)))
+      .then((res) => dispatch(setCartCount(count[0].sum)))
       .then((res) => setTotal(total[0].sum));
   };
 
@@ -55,7 +55,7 @@ const Cart = (props) => {
             total = res.total;
           })
           .then((res) => setCart(product))
-          .then((res) => dispatch(setCartCount(count[0].count)))
+          .then((res) => dispatch(setCartCount(count[0].sum)))
           .then((res) => setTotal(total[0].sum))
           .then(localStorage.removeItem("cart"));
       } catch (err) {
@@ -78,7 +78,7 @@ const Cart = (props) => {
             total = res.total;
           })
           .then((res) => setCart(product))
-          .then((res) => dispatch(setCartCount(count[0].count)))
+          .then((res) => dispatch(setCartCount(count[0].sum)))
           .then((res) => setTotal(total[0].sum));
       } catch (err) {
         console.error(err.message);
@@ -114,7 +114,7 @@ const Cart = (props) => {
                 <h2>{product.name}</h2>
               </Link>
               <h2 className='price'>${product.price}</h2>
-
+              <h3 className='quantity'>quantity: {product.quantity}</h3>
               <button
                 onClick={() => removeFromCart(product.product_id)}
                 className='remove-from-cart-button'
