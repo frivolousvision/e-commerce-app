@@ -35,7 +35,6 @@ const stripePromise = loadStripe(
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   const dispatch = useDispatch();
 
   const setAuth = (boolean) => {
@@ -48,25 +47,31 @@ function App() {
         headers: { token: localStorage.token },
       });
       const parseRes = await response.json();
-      console.log(parseRes);
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
     }
   };
   const loadCart = () => {
     try {
       if (!localStorage.token) {
-        return dispatch(setCartCount(JSON.parse(localStorage.cart).length));
+        fetch("/guest-cart-count")
+          .then((res) => res.json())
+          .then((res) => {
+            if (!res[0].sum) {
+              return dispatch(setCartCount(0));
+            }
+            if (res[0].sum) return dispatch(setCartCount(res[0].sum));
+          });
       }
       if (localStorage.token) {
-        fetch("/count", {
+        fetch("/user-cart-count", {
           method: "GET",
           headers: { token: localStorage.token },
         })
           .then((res) => res.json())
           .then((res) => {
-            return dispatch(setCartCount(res[0].count));
+            return dispatch(setCartCount(res[0].sum));
           });
       } else {
         return;
@@ -83,7 +88,7 @@ function App() {
       loadCart();
       return () => (mounted = false);
     }
-  }, [dispatch, localStorage.token, localStorage.cart]);
+  }, [dispatch]);
 
   return (
     <Fragment>
@@ -141,17 +146,19 @@ function App() {
             <Route
               path='/cart'
               exact
-              render={(props) =>
-                isAuthenticated ? (
+              component={
+                (props) => (
+                  // isAuthenticated ? (
                   <Cart
                     {...props}
+                    isAuthenticated={isAuthenticated}
                     setAuth={setAuth}
                     loadCart={loadCart}
-                    isAuthenticated={isAuthenticated}
                   />
-                ) : (
-                  <Redirect to='/disclaimer' />
                 )
+                // ) : (
+                // <Redirect to='/disclaimer' />
+                // )
               }
             />
             <Route

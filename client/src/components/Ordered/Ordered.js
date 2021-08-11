@@ -9,13 +9,13 @@ const Ordered = () => {
   const [products, setProducts] = useState(null);
 
   const getOrdered = () => {
-    fetch("http://localhost:5000/ordered", {
+    fetch("/ordered", {
       method: "GET",
       headers: { token: localStorage.token },
     })
       .then((res) => res.json())
-      .then((res) => setProducts(res))
-      .then(console.log(products));
+      .then((res) => setProducts(res));
+    // .then(console.log(products));
   };
 
   const loadCart = () => {
@@ -26,7 +26,7 @@ const Ordered = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          return dispatch(setCartCount(res[0].count));
+          return dispatch(setCartCount(res[0].sum));
         });
     } catch (err) {
       console.error(err.message);
@@ -44,7 +44,7 @@ const Ordered = () => {
       ) : (
         <h2>Welcome!</h2>
       )}
-      {products && products[0] && products[1] ? (
+      {products && products[0] ? (
         <p>Your orders:</p>
       ) : (
         <div>
@@ -52,11 +52,12 @@ const Ordered = () => {
           <Link to='/'>Start shopping here!</Link>
         </div>
       )}
-      {products && products[0] && products[1]
+      {products && products[0]
         ? products.map((product, index) => (
             <div key={index}>
               <p>{product.product_name}</p>
               <img src={product.img_url} />
+              <p>quantity: {product.quantity}</p>
             </div>
           ))
         : null}

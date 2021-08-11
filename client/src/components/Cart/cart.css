@@ -44,22 +44,23 @@
   justify-content: center;
   height: 5rem;
   width: 12rem;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 8vh;
   margin: 0 auto;
+  margin-bottom: 1rem;
+  margin-top: -10rem;
   width: 50%;
 }
 
 .empty-cart {
   margin-top: 10vh;
+  margin-bottom: 10vh;
   font-size: 1.3rem;
 }
 .price {
   margin-top: -0.2rem;
 }
-
+.quantity {
+  margin-top: -0.2rem;
+}
 .product-list {
   margin-bottom: 8rem;
 }
@@ -72,12 +73,20 @@
 .logout-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 2rem;
 }
 .logout-button {
   background-color: red;
 }
 .logout-button:hover {
   background-color: rgb(156, 6, 6);
+  cursor: pointer;
+}
+.login-button {
+  background-color: green;
+}
+.login-button:hover {
+  background-color: rgb(6, 173, 6);
   cursor: pointer;
 }
 @media only screen and (max-width: 600px) {

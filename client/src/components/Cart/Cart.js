@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
@@ -11,22 +12,50 @@ const Cart = (props) => {
   const [total, setTotal] = useState();
   const dispatch = useDispatch();
 
-  //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     let count;
     let total;
     setCart(cart.filter((item) => item.product_id !== id));
-    fetch(`/removefromcart/${id}`, {
-      method: "GET",
-      headers: { token: localStorage.token },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        total = res.total;
-        count = res.count;
+    if (!localStorage.token) {
+      fetch(`/remove-from-cart-guest/${id}`, {
+        method: "GET",
       })
-      .then((res) => dispatch(setCartCount(count[0].count)))
-      .then((res) => setTotal(total[0].sum));
+        .then((res) => res.json())
+        .then((res) => {
+          total = res.total;
+          count = res.count;
+        })
+        .then((res) => {
+          if (!count[0].sum) {
+            dispatch(setCartCount(0));
+          }
+          if (count[0].sum) {
+            dispatch(setCartCount(count[0].sum));
+          }
+        })
+        .then((res) => setTotal(total[0].sum));
+    }
+
+    if (localStorage.token) {
+      fetch(`/remove-from-cart-user/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          total = res.total;
+          count = res.count;
+        })
+        .then((res) => {
+          if (!count[0].sum) {
+            dispatch(setCartCount(0));
+          }
+          if (count[0].sum) {
+            dispatch(setCartCount(count[0].sum));
+          }
+        })
+        .then((res) => setTotal(total[0].sum));
+    }
   };
 
   const logout = (e) => {
@@ -39,30 +68,39 @@ const Cart = (props) => {
   };
 
   const getCart = () => {
-    if (localStorage.cart) {
+    if (!localStorage.token) {
       try {
         let count;
         let total;
         let product;
-        return fetch("/api/guest-cart", {
+        console.log("get cart");
+
+        fetch("/api/guest-cart-info", {
           method: "GET",
-          headers: { token: localStorage.token, cart: localStorage.cart },
+          headers: { cart: localStorage.cart },
         })
           .then((res) => res.json())
           .then((res) => {
+            console.log(res);
             product = res.product;
             count = res.count;
             total = res.total;
           })
           .then((res) => setCart(product))
-          .then((res) => dispatch(setCartCount(count[0].count)))
-          .then((res) => setTotal(total[0].sum))
-          .then(localStorage.removeItem("cart"));
+          .then((res) => {
+            if (!count[0].sum) {
+              dispatch(setCartCount(0));
+            }
+            if (count[0].sum) {
+              dispatch(setCartCount(count[0].sum));
+            }
+          })
+          .then((res) => setTotal(total[0].sum));
       } catch (err) {
         console.error(err.message);
       }
     }
-    if (!localStorage.cart) {
+    if (localStorage.token) {
       try {
         let count;
         let total;
@@ -78,7 +116,14 @@ const Cart = (props) => {
             total = res.total;
           })
           .then((res) => setCart(product))
-          .then((res) => dispatch(setCartCount(count[0].count)))
+          .then((res) => {
+            if (!count[0].sum) {
+              dispatch(setCartCount(0));
+            }
+            if (count[0].sum) {
+              dispatch(setCartCount(count[0].sum));
+            }
+          })
           .then((res) => setTotal(total[0].sum));
       } catch (err) {
         console.error(err.message);
@@ -94,16 +139,6 @@ const Cart = (props) => {
     <Fragment>
       <div className='top'>
         <Link to='/ordered'>Order History</Link>
-        <div className='cart-total-container'>
-          <div className=''>
-            <p className='cart-total'>Cart total:${total ? total : 0}</p>
-          </div>
-          <div className='checkout-button'>
-            <Link to='/checkout'>
-              <p className=''>Checkout</p>
-            </Link>
-          </div>
-        </div>
       </div>
       <div className='product-list'>
         {cart.length ? (
@@ -114,7 +149,7 @@ const Cart = (props) => {
                 <h2>{product.name}</h2>
               </Link>
               <h2 className='price'>${product.price}</h2>
-
+              <h3 className='quantity'>quantity: {product.quantity}</h3>
               <button
                 onClick={() => removeFromCart(product.product_id)}
                 className='remove-from-cart-button'
@@ -127,10 +162,24 @@ const Cart = (props) => {
           <p className='empty-cart'>Your cart is empty</p>
         )}
       </div>
+      <div className='cart-total-container'>
+        <div className=''>
+          <p className='cart-total'>Cart total:${total ? total : 0}</p>
+        </div>
+        <div className='checkout-button'>
+          <Link to='/checkout'>
+            <p className=''>Checkout</p>
+          </Link>
+        </div>
+      </div>
       <div className='logout-container'>
-        <button onClick={(e) => logout(e)} className='logout-button'>
-          Logout
-        </button>
+        {localStorage.token ? (
+          <button onClick={(e) => logout(e)} className='logout-button'>
+            Logout
+          </button>
+        ) : (
+          <button className='login-button'>Login</button>
+        )}
       </div>
     </Fragment>
   );

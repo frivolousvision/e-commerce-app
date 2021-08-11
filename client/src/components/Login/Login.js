@@ -36,7 +36,7 @@ const Login = ({ setAuth }) => {
         toast.error(parseRes);
       }
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
     }
   };
   return (

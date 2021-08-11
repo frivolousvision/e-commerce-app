@@ -52,7 +52,7 @@ const Checkout = () => {
       let count;
       let total;
       let product;
-      return fetch("http://localhost:5000/api/user-cart", {
+      return fetch("/api/user-cart", {
         method: "GET",
         headers: { token: localStorage.token },
       })
@@ -63,7 +63,7 @@ const Checkout = () => {
           total = res.total;
         })
         .then((res) => setCart(product))
-        .then((res) => dispatch(setCartCount(count[0].count)))
+        .then((res) => dispatch(setCartCount(count[0].sum)))
         .then((res) => setTotal(total[0].sum));
     } catch (err) {
       console.error(err.message);
@@ -71,7 +71,7 @@ const Checkout = () => {
   };
   const getUser = () => {
     try {
-      fetch("http://localhost:5000/api/user", {
+      fetch("/api/user", {
         method: "GET",
         headers: { token: localStorage.token },
       })
@@ -83,7 +83,7 @@ const Checkout = () => {
   };
 
   const cartToOrder = () => {
-    fetch("http://localhost:5000/cart-to-ordered", {
+    fetch("/cart-to-ordered", {
       method: "GET",
       headers: { token: localStorage.token },
     });
@@ -92,7 +92,6 @@ const Checkout = () => {
   useEffect(() => {
     getCart();
     getUser();
-    console.log(total);
 
     window
       .fetch("/create-payment-intent", {

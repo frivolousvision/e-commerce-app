@@ -21,13 +21,27 @@ const ProductInfo = ({ match, isAuthenticated }) => {
   }, []);
 
   const addToCart = (id) => {
-    dispatch(setCartTrue());
-    fetch(`/addtocart/${id}`, {
-      method: "GET",
-      headers: { token: localStorage.token },
-    })
-      .then((res) => res.json())
-      .then((res) => dispatch(setCartCount(res[0].count)));
+    let localStorageCart = [];
+    //If user isn't logged in, add items in local storage to cart
+    if (!localStorage.token) {
+      fetch(`/add-to-cart-guest/${id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+
+        .then((res) => dispatch(setCartCount(res[0].sum)));
+    }
+    //If user is logged in
+    if (localStorage.token) {
+      dispatch(setCartTrue());
+      fetch(`/add-to-cart-user/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      })
+        .then((res) => res.json())
+
+        .then((res) => dispatch(setCartCount(res[0].sum)));
+    }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
   };
@@ -42,7 +56,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
       .then((res) => {
         count = res.count;
       })
-      .then((res) => dispatch(setCartCount(count[0].count)));
+      .then((res) => dispatch(setCartCount(count[0].sum)));
   };
 
   return (
@@ -57,21 +71,18 @@ const ProductInfo = ({ match, isAuthenticated }) => {
               <h3>{productInfo.description}</h3>
               <h2>${productInfo.price}</h2>
               <div className='buttons'>
-                {isAuthenticated ? (
-                  button ? (
-                    <button className='add-to-cart-action buttons'>
-                      Added to cart!
-                    </button>
-                  ) : (
-                    <button
-                      className='buttons'
-                      onClick={() => addToCart(product.product_id)}
-                    >
-                      Add to cart
-                    </button>
-                  )
-                ) : null}
-
+                {button ? (
+                  <button className='add-to-cart-action buttons'>
+                    Added to cart!
+                  </button>
+                ) : (
+                  <button
+                    className='buttons'
+                    onClick={() => addToCart(productInfo.product_id)}
+                  >
+                    Add to cart
+                  </button>
+                )}
                 {/* {inCart ? (
                   <button
                     className='remove-from-cart-button'
