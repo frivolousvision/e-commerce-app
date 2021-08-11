@@ -82,6 +82,13 @@
   background-color: rgb(156, 6, 6);
   cursor: pointer;
 }
+.login-button {
+  background-color: green;
+}
+.login-button:hover {
+  background-color: rgb(6, 173, 6);
+  cursor: pointer;
+}
 @media only screen and (max-width: 600px) {
   .cart-total-container {
     width: 90%;

@@ -24,18 +24,17 @@ const ProductInfo = ({ match, isAuthenticated }) => {
     let localStorageCart = [];
     //If user isn't logged in, add items in local storage to cart
     if (!localStorage.token) {
-      const item = {
-        product_id: product.product_id,
-      };
-      localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-      localStorageCart.push(item);
-      localStorage.setItem("cart", JSON.stringify(localStorageCart));
-      dispatch(setCartCount(JSON.parse(localStorage.cart).length));
+      fetch(`/add-to-cart-guest/${id}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+
+        .then((res) => dispatch(setCartCount(res[0].sum)));
     }
     //If user is logged in
     if (localStorage.token) {
       dispatch(setCartTrue());
-      fetch(`/addtocart/${id}`, {
+      fetch(`/add-to-cart-user/${id}`, {
         method: "GET",
         headers: { token: localStorage.token },
       })
@@ -79,7 +78,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
                 ) : (
                   <button
                     className='buttons'
-                    onClick={() => addToCart(product.product_id)}
+                    onClick={() => addToCart(productInfo.product_id)}
                   >
                     Add to cart
                   </button>

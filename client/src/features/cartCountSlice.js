@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const cartCountOptions = {
   name: "cartCount",
-  initialState: "",
+  initialState: 0,
   reducers: {
     setCartCount: (state, action) => {
       return (state = action.payload);

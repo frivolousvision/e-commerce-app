@@ -14,24 +14,23 @@ const Product = (props) => {
     let localStorageCart = [];
     //If user isn't logged in, add items in local storage to cart
     if (!localStorage.token) {
-      const item = {
-        product_id: props.product.product_id,
-      };
-      localStorageCart = JSON.parse(localStorage.getItem("cart")) || [];
-      localStorageCart.push(item);
-      localStorage.setItem("cart", JSON.stringify(localStorageCart));
-      dispatch(setCartCount(JSON.parse(localStorage.cart).length));
+      fetch(`/add-to-cart-guest/${id}`)
+        .then((res) => res.json())
+        .then((res) => dispatch(setCartCount(res[0].sum)));
+      console.log("guest cart");
     }
+
     //If user is logged in
     if (localStorage.token) {
       dispatch(setCartTrue());
-      fetch(`/addtocart/${id}`, {
+      fetch(`/add-to-cart-user/${id}`, {
         method: "GET",
         headers: { token: localStorage.token },
       })
         .then((res) => res.json())
 
         .then((res) => dispatch(setCartCount(res[0].sum)));
+      console.log("user cart");
     }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
