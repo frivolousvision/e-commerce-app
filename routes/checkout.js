@@ -22,16 +22,25 @@ router.post("/create-payment-intent", authorization, async (req, res) => {
 
 router.get("/cart-to-ordered", authorization, async (req, res) => {
   try {
-    pool.query(
-      "INSERT INTO users_products_ordered (user_id, product_id, quantity) SELECT user_id, product_id, quantity FROM users_products_cart WHERE user_id = $1;",
+    const order = await pool.query(
+      "INSERT INTO users_products_ordered (user_id, product_id, quantity) SELECT user_id, product_id, quantity FROM users_products_cart WHERE user_id = $1 ON CONFLICT ON CONSTRAINT users_products_ordered_pkey DO UPDATE SET quantity = users_products_ordered.quantity + excluded.quantity WHERE users_products_ordered.product_id = excluded.product_id;",
       [req.user]
     );
-
-    pool.query("DELETE FROM users_products_cart WHERE user_id = $1", [
-      req.user,
-    ]);
     res.send("Success");
   } catch (err) {
+    console.log("error in cart to ordered");
+    console.error(err.message);
+  }
+});
+
+router.get("/clear-user-cart", authorization, async (req, res) => {
+  try {
+    const clearCart = await pool.query(
+      "DELETE FROM users_products_cart WHERE user_id = $1",
+      [req.user]
+    );
+  } catch (err) {
+    console.log("error in clear cart");
     console.error(err.message);
   }
 });

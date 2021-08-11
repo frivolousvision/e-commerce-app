@@ -13,7 +13,7 @@ router.get("/add-to-cart-guest/:id", async (req, res) => {
       "SELECT SUM(guest_products_cart.quantity) FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
       [req.sessionID]
     );
-    res.send(count.rows);
+    res.json(count.rows);
   } catch (err) {
     console.error(err.message);
   }
@@ -29,7 +29,7 @@ router.get("/add-to-cart-user/:id", authorization, async (req, res) => {
       "SELECT SUM(users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
-    res.send(count.rows);
+    res.json(count.rows);
   } catch (err) {
     console.error(err.message);
   }
@@ -49,7 +49,7 @@ router.get("/remove-from-cart-guest/:id", async (req, res) => {
       "SELECT SUM(products.price * guest_products_cart.quantity) FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
       [req.sessionID]
     );
-    res.send({ count: count.rows, total: total.rows });
+    res.json({ count: count.rows, total: total.rows });
   } catch (err) {
     console.error(err.message);
   }
@@ -70,7 +70,7 @@ router.get("/remove-from-cart-user/:id", authorization, async (req, res) => {
       "SELECT SUM(products.price * users_products_cart.quantity) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
       [req.user]
     );
-    res.send({ count: count.rows, total: total.rows });
+    res.json({ count: count.rows, total: total.rows });
   } catch (err) {
     console.error(err.message);
   }

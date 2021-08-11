@@ -16,6 +16,24 @@ const Login = ({ setAuth }) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
+  const guestCartToUserCart = () => {
+    try {
+      fetch("/guest-cart-to-user-cart", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+      setTimeout(() => {
+        try {
+          fetch("/clear-guest-cart");
+        } catch (err) {
+          console.error(err.message);
+        }
+      }, 3000);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
@@ -26,11 +44,11 @@ const Login = ({ setAuth }) => {
         body: JSON.stringify(body),
       });
       const parseRes = await response.json();
-
       if (parseRes.token) {
         localStorage.setItem("token", parseRes.token);
         setAuth(true);
         toast.success("login successful!");
+        guestCartToUserCart();
       } else {
         setAuth(false);
         toast.error(parseRes);

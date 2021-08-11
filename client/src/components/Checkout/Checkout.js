@@ -42,8 +42,14 @@ const Checkout = () => {
       setSucceeded(true);
       setTimeout(() => {
         setRedirect(true);
-      }, 3000);
+      }, 1000);
       cartToOrder();
+      setTimeout(() => {
+        clearUserCart();
+      }, 1000);
+      setTimeout(() => {
+        getCart();
+      }, 1000);
     }
   };
 
@@ -83,10 +89,24 @@ const Checkout = () => {
   };
 
   const cartToOrder = () => {
-    fetch("/cart-to-ordered", {
-      method: "GET",
-      headers: { token: localStorage.token },
-    });
+    try {
+      fetch("/cart-to-ordered", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const clearUserCart = () => {
+    try {
+      fetch("/clear-user-cart", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   useEffect(() => {

@@ -6,15 +6,15 @@ router.get("/api/guest-cart-info", async (req, res) => {
   try {
     const total = await pool.query(
       "SELECT SUM(products.price * guest_products_cart.quantity) FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
-      [req.session.id]
+      [req.sessionID]
     );
     const count = await pool.query(
       "SELECT SUM(guest_products_cart.quantity) FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
-      [req.session.id]
+      [req.sessionID]
     );
     const products = await pool.query(
       "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url, guest_products_cart.quantity AS quantity FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
-      [req.session.id]
+      [req.sessionID]
     );
     res.json({
       product: products.rows,
@@ -45,6 +45,16 @@ router.get("/api/user-cart", authorization, async (req, res) => {
       total: total.rows,
       count: count.rows,
     });
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+router.get("/api/user", authorization, async (req, res) => {
+  try {
+    const user = await pool.query("SELECT * FROM users WHERE user_id = $1;", [
+      req.user,
+    ]);
+    res.json(user.rows);
   } catch (err) {
     console.error(err.message);
   }

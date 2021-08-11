@@ -15,7 +15,6 @@ const Ordered = () => {
     })
       .then((res) => res.json())
       .then((res) => setProducts(res));
-    // .then(console.log(products));
   };
 
   const loadCart = () => {
@@ -37,6 +36,7 @@ const Ordered = () => {
     getOrdered();
     loadCart();
   }, []);
+
   return (
     <div className='ordered-container'>
       {products && products[0] && products[0].user_name ? (
