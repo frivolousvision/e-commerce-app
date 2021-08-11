@@ -11,16 +11,11 @@ const Product = (props) => {
   const [button, setButton] = useState();
 
   const addToCart = (id) => {
-    let localStorageCart = [];
-    //If user isn't logged in, add items in local storage to cart
     if (!localStorage.token) {
       fetch(`/add-to-cart-guest/${id}`)
         .then((res) => res.json())
         .then((res) => dispatch(setCartCount(res[0].sum)));
-      console.log("guest cart");
     }
-
-    //If user is logged in
     if (localStorage.token) {
       dispatch(setCartTrue());
       fetch(`/add-to-cart-user/${id}`, {
@@ -30,7 +25,6 @@ const Product = (props) => {
         .then((res) => res.json())
 
         .then((res) => dispatch(setCartCount(res[0].sum)));
-      console.log("user cart");
     }
     setButton(true);
     setTimeout(() => setButton(false), 1000);

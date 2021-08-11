@@ -12,7 +12,6 @@ const Cart = (props) => {
   const [total, setTotal] = useState();
   const dispatch = useDispatch();
 
-  //Sets "in_cart" in DB to false, filers displayed results
   const removeFromCart = (id) => {
     let count;
     let total;
@@ -140,19 +139,9 @@ const Cart = (props) => {
     <Fragment>
       <div className='top'>
         <Link to='/ordered'>Order History</Link>
-        <div className='cart-total-container'>
-          <div className=''>
-            <p className='cart-total'>Cart total:${total ? total : 0}</p>
-          </div>
-          <div className='checkout-button'>
-            <Link to='/checkout'>
-              <p className=''>Checkout</p>
-            </Link>
-          </div>
-        </div>
       </div>
       <div className='product-list'>
-        {cart ? (
+        {cart.length ? (
           cart.map((product) => (
             <div className='product-box' key={product.product_id}>
               <Link to={`/${product.product_id}`}>
@@ -172,6 +161,16 @@ const Cart = (props) => {
         ) : (
           <p className='empty-cart'>Your cart is empty</p>
         )}
+      </div>
+      <div className='cart-total-container'>
+        <div className=''>
+          <p className='cart-total'>Cart total:${total ? total : 0}</p>
+        </div>
+        <div className='checkout-button'>
+          <Link to='/checkout'>
+            <p className=''>Checkout</p>
+          </Link>
+        </div>
       </div>
       <div className='logout-container'>
         {localStorage.token ? (

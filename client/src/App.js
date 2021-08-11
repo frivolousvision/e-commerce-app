@@ -47,10 +47,9 @@ function App() {
         headers: { token: localStorage.token },
       });
       const parseRes = await response.json();
-      console.log(parseRes);
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
-      console.log(err.message);
+      console.error(err.message);
     }
   };
   const loadCart = () => {

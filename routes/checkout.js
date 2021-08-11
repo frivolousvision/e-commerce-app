@@ -10,7 +10,6 @@ router.post("/create-payment-intent", authorization, async (req, res) => {
     "SELECT SUM(products.price) FROM users, products, users_products_cart WHERE users_products_cart.user_id = $1 AND users.user_id = users_products_cart.user_id AND products.product_id = users_products_cart.product_id;",
     [req.user]
   );
-  console.log(total.rows[0].sum);
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: total.rows[0].sum * 100,
@@ -31,7 +30,6 @@ router.get("/cart-to-ordered", authorization, async (req, res) => {
     pool.query("DELETE FROM users_products_cart WHERE user_id = $1", [
       req.user,
     ]);
-    console.log("success!");
     res.send("Success");
   } catch (err) {
     console.error(err.message);

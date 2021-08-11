@@ -44,16 +44,15 @@
   justify-content: center;
   height: 5rem;
   width: 12rem;
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 8vh;
   margin: 0 auto;
+  margin-bottom: 1rem;
+  margin-top: -10rem;
   width: 50%;
 }
 
 .empty-cart {
   margin-top: 10vh;
+  margin-bottom: 10vh;
   font-size: 1.3rem;
 }
 .price {
@@ -74,6 +73,7 @@
 .logout-container {
   display: flex;
   justify-content: center;
+  margin-bottom: 2rem;
 }
 .logout-button {
   background-color: red;

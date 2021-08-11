@@ -16,9 +16,7 @@ router.get("/api/guest-cart-info", async (req, res) => {
       "SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url, guest_products_cart.quantity AS quantity FROM products, guest_products_cart WHERE guest_products_cart.user_id = $1 AND products.product_id = guest_products_cart.product_id;",
       [req.session.id]
     );
-    console.log(products.rows);
     res.json({
-      // productsArray: productsArray,
       product: products.rows,
       total: total.rows,
       count: count.rows,
