@@ -134,7 +134,13 @@ const Cart = (props) => {
   return (
     <Fragment>
       <div className='top'>
-        <Link to='/ordered'>Order History</Link>
+        {localStorage.token && (
+          <div className='orders-button-container'>
+            <Link to='/ordered'>
+              <button className='orders-button'>View Orders</button>
+            </Link>
+          </div>
+        )}
       </div>
       <div className='product-list'>
         {cart.length ? (

@@ -55,3 +55,9 @@ input {
     border: 1px soild red;
   }
 }
+
+@media only screen and (min-width: 800px) {
+  .register-container {
+    margin-top: 15vh;
+  }
+}
