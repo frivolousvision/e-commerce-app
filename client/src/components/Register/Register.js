@@ -15,7 +15,23 @@ const Register = ({ setAuth }) => {
   const handleChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
-
+  const guestCartToUserCart = () => {
+    try {
+      fetch("/guest-cart-to-user-cart", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+      setTimeout(() => {
+        try {
+          fetch("/clear-guest-cart").then((res) => console.log("cleared"));
+        } catch (err) {
+          console.error(err.message);
+        }
+      }, 3000);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
@@ -31,6 +47,7 @@ const Register = ({ setAuth }) => {
         localStorage.setItem("token", parseRes.token);
         setAuth(true);
         toast.success(`Registered Succesfully!`);
+        guestCartToUserCart();
       } else {
         setAuth(false);
         toast.error(parseRes);

@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
@@ -58,30 +57,18 @@ const Cart = (props) => {
     }
   };
 
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
-    props.setAuth(false);
-    props.loadCart();
-    toast.success("You logged out successfully");
-    dispatch(setCartCount(0));
-  };
-
   const getCart = () => {
     if (!localStorage.token) {
       try {
         let count;
         let total;
         let product;
-        console.log("get cart");
-
         fetch("/api/guest-cart-info", {
           method: "GET",
           headers: { cart: localStorage.cart },
         })
           .then((res) => res.json())
           .then((res) => {
-            console.log(res);
             product = res.product;
             count = res.count;
             total = res.total;
@@ -131,6 +118,15 @@ const Cart = (props) => {
     }
   };
 
+  const logout = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    props.setAuth(false);
+    props.loadCart();
+    toast.success("You logged out successfully");
+    dispatch(setCartCount(0));
+  };
+
   useEffect(() => {
     getCart();
   }, []);
@@ -178,7 +174,9 @@ const Cart = (props) => {
             Logout
           </button>
         ) : (
-          <button className='login-button'>Login</button>
+          <Link to='/login'>
+            <button className='login-button'>Login</button>
+          </Link>
         )}
       </div>
     </Fragment>

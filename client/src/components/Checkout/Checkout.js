@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
 import "./checkout.css";
@@ -7,7 +7,6 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 const Checkout = () => {
   const dispatch = useDispatch();
-  const [cart, setCart] = useState();
   const [total, setTotal] = useState();
   const [user, setUser] = useState();
   const [clientSecret, setClientSecret] = useState("");
@@ -42,8 +41,14 @@ const Checkout = () => {
       setSucceeded(true);
       setTimeout(() => {
         setRedirect(true);
-      }, 3000);
+      }, 1000);
       cartToOrder();
+      setTimeout(() => {
+        clearUserCart();
+      }, 1000);
+      setTimeout(() => {
+        getCart();
+      }, 1000);
     }
   };
 
@@ -51,18 +56,15 @@ const Checkout = () => {
     try {
       let count;
       let total;
-      let product;
       return fetch("/api/user-cart", {
         method: "GET",
         headers: { token: localStorage.token },
       })
         .then((res) => res.json())
         .then((res) => {
-          product = res.product;
           count = res.count;
           total = res.total;
         })
-        .then((res) => setCart(product))
         .then((res) => dispatch(setCartCount(count[0].sum)))
         .then((res) => setTotal(total[0].sum));
     } catch (err) {
@@ -83,10 +85,24 @@ const Checkout = () => {
   };
 
   const cartToOrder = () => {
-    fetch("/cart-to-ordered", {
-      method: "GET",
-      headers: { token: localStorage.token },
-    });
+    try {
+      fetch("/cart-to-ordered", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+  const clearUserCart = () => {
+    try {
+      fetch("/clear-user-cart", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   useEffect(() => {

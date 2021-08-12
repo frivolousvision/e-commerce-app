@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
-import { setCartFalse, setCartTrue } from "../../features/inCartSlice";
 import "../Products/products.css";
 
 const ProductInfo = ({ match, isAuthenticated }) => {
@@ -9,7 +8,6 @@ const ProductInfo = ({ match, isAuthenticated }) => {
   const [product, setProduct] = useState("");
   const [button, setButton] = useState("");
 
-  //Loads individual product on render
   useEffect(() => {
     const getProduct = async () => {
       const response = await fetch(`api/${match.params.id}`);
@@ -17,12 +15,9 @@ const ProductInfo = ({ match, isAuthenticated }) => {
       setProduct(jsonProduct);
     };
     getProduct();
-    // console.log(product);
   }, []);
 
   const addToCart = (id) => {
-    let localStorageCart = [];
-    //If user isn't logged in, add items in local storage to cart
     if (!localStorage.token) {
       fetch(`/add-to-cart-guest/${id}`, {
         method: "GET",
@@ -31,9 +26,7 @@ const ProductInfo = ({ match, isAuthenticated }) => {
 
         .then((res) => dispatch(setCartCount(res[0].sum)));
     }
-    //If user is logged in
     if (localStorage.token) {
-      dispatch(setCartTrue());
       fetch(`/add-to-cart-user/${id}`, {
         method: "GET",
         headers: { token: localStorage.token },
@@ -44,19 +37,6 @@ const ProductInfo = ({ match, isAuthenticated }) => {
     }
     setButton(true);
     setTimeout(() => setButton(false), 1000);
-  };
-  const removeFromCart = (id) => {
-    let count;
-    dispatch(setCartFalse());
-    fetch(`removefromcart/${id}`, {
-      method: "GET",
-      headers: { token: localStorage.token },
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        count = res.count;
-      })
-      .then((res) => dispatch(setCartCount(count[0].sum)));
   };
 
   return (

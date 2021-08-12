@@ -118,11 +118,12 @@ CREATE TABLE guest_products_cart (
     user_id uuid,
     product_id INTEGER REFERENCES products(product_id) ON DELETE CASCADE,
     quantity INTEGER,
-    PRIMARY KEY (product_id)
+    PRIMARY KEY (user_id, product_id)
 );
 SELECT SUM(guest_products_cart.quantity) FROM users, products, guest_products_cart WHERE guest_products_cart.user_id = '724db3b5-a6a0-4aab-9725-df61aa8fc81c' AND products.product_id = guest_products_cart.product_id;
 SELECT products.product_id AS product_id, products.name AS name, products.description AS description, products.price AS price, products.img_url AS img_url, guest_products_cart.quantity AS quantity FROM products, guest_products_cart WHERE guest_products_cart.user_id = '2c920b50-c051-4772-8f35-bacb2a7928de' AND products.product_id = guest_products_cart.product_id;
-INSERT INTO guest_products_cart VALUES ( '123', '9', '1') ON CONFLICT ON CONSTRAINT guest_products_cart_pkey DO UPDATE SET quantity = guest_products_cart.quantity + 1 WHERE guest_products_cart.product_id = 9;
+INSERT INTO guest_products_cart VALUES ( '842ecfb6-e26e-4963-b4fb-c7b2d468d152', '2', '1') ON CONFLICT ON CONSTRAINT guest_products_cart_pkey DO UPDATE SET quantity = guest_products_cart.quantity + 1 WHERE guest_products_cart.product_id = '2';
+SELECT SUM(guest_products_cart.quantity) FROM guest_products_cart WHERE guest_products_cart.user_id = '842ecfb6-e26e-4963-b4fb-c7b2d468d152';
 
 
 INSERT INTO guest_products_cart (user_id, product_id, quantity) VALUES ( 'Ze9558mrlNCas8-8zYR0L_NRgB_4pRNZ', '4', '1') ON CONFLICT ON CONSTRAINT guest_products_cart_pkey DO UPDATE SET quantity = guest_products_cart.quantity + 1 WHERE guest_products_cart.product_id = '4';
@@ -146,6 +147,77 @@ SELECT user_id, product_id
 FROM users_products_cart
 WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
 
+INSERT INTO books (id, title, author_id, subject_id)
+SELECT nextval('book_ids'), title, author_id, subject_id
+FROM book_queue WHERE approved;
+
+
+
+
+--THIS WORKS
+INSERT INTO users_products_cart (user_id, product_id, quantity) 
+SELECT 'f91b3e18-9d5b-4380-acc5-528802addd90', guest_products_cart.product_id, guest_products_cart.quantity
+FROM guest_products_cart 
+WHERE guest_products_cart.user_id = '842ecfb6-e26e-4963-b4fb-c7b2d468d152'
+ON CONFLICT ON CONSTRAINT "users_products_cart_pkey" 
+DO UPDATE SET quantity = users_products_cart.quantity + 1;
+
+
+
+
+--trying
+INSERT INTO users_products_cart (user_id, product_id, quantity) 
+SELECT 'f91b3e18-9d5b-4380-acc5-528802addd90', guest_products_cart.product_id, guest_products_cart.quantity
+FROM guest_products_cart 
+WHERE guest_products_cart.user_id = '842ecfb6-e26e-4963-b4fb-c7b2d468d152'
+ON CONFLICT ON CONSTRAINT "users_products_cart_pkey" 
+DO UPDATE SET quantity = users_products_cart.quantity + excluded.quantity
+WHERE users_products_cart.product_id = excluded.product_id;
+
+
+
+
+
+INSERT INTO users_products_ordered (user_id, product_id, quantity) 
+SELECT user_id, product_id, quantity FROM users_products_cart WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1'
+ON CONFLICT ON CONSTRAINT users_products_ordered_pkey
+DO UPDATE SET quantity = users_products_ordered.quantity + excluded.quantity
+WHERE users_products_ordered.product_id = excluded.product_id;
+
+
+INSERT INTO users_products_ordered (user_id, product_id, quantity) 
+SELECT 'f91b3e18-9d5b-4380-acc5-528802addd90', guest_products_cart.product_id, guest_products_cart.quantity
+FROM users_products_cart 
+WHERE guest_products_cart.user_id = '842ecfb6-e26e-4963-b4fb-c7b2d468d152'
+ON CONFLICT ON CONSTRAINT "users_products_cart_pkey" 
+DO UPDATE SET quantity = users_products_cart.quantity + excluded.quantity
+WHERE users_products_cart.product_id = excluded.product_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT guest_products_cart.user_id AS guest_user_id, guest_products_cart.product_id AS guest_product_id, guest_products_cart.quantity AS guest_quantity
+FROM guest_products_cart (
+    INSERT INTO users_products_cart (user_id, product_id, quantity) 
+    VALUES ('f91b3e18-9d5b-4380-acc5-528802addd90', guest_product_id, guest_quantity)
+    WHERE guest_user_id = '842ecfb6-e26e-4963-b4fb-c7b2d468d152'
+    ON CONFLICT ON CONSTRAINT "users_products_cart_pkey" 
+DO UPDATE SET quantity = users_products_cart.quantity + guest_quantity
+WHERE users_products_cart.product_id = guest_user_id
+);
+
+
+
+
 ---THIS ONE!!!!
 INSERT INTO users_products_cart VALUES ( 'f91b3e18-9d5b-4380-acc5-528802addd90', '5', '1')
 ON CONFLICT ON CONSTRAINT "users_products_cart_pkey" DO UPDATE SET quantity = users_products_cart.quantity + 1 WHERE users_products_cart.product_id = '5';
@@ -161,6 +233,7 @@ INSERT INTO users_products_cart  ('7360be7b-35ae-4f88-954b-ae43204e0658', '6') R
 DELETE FROM users_products_cart WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
 DELETE FROM users_products_ordered WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
 
+DELETE FROM guest_products_cart WHERE user_id = 'd16dee11-5548-4dfe-8d6c-034907e789e1';
 
 SELECT users.user_email AS user_email, products.name AS product_name, products.price AS price
 FROM users, products, users_products_cart
