@@ -17,24 +17,58 @@ const Ordered = () => {
       .then((res) => setProducts(res));
   };
 
-  const loadCart = () => {
-    try {
-      fetch("/count", {
-        method: "GET",
-        headers: { token: localStorage.token },
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          return dispatch(setCartCount(res[0].sum));
-        });
-    } catch (err) {
-      console.error(err.message);
+  const getCart = () => {
+    if (!localStorage.token) {
+      try {
+        let count;
+        fetch("/api/guest-cart-info", {
+          method: "GET",
+          headers: { cart: localStorage.cart },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            count = res.count;
+          })
+          .then((res) => {
+            if (!count[0].sum) {
+              dispatch(setCartCount(0));
+            }
+            if (count[0].sum) {
+              dispatch(setCartCount(count[0].sum));
+            }
+          });
+      } catch (err) {
+        console.error(err.message);
+      }
+    }
+    if (localStorage.token) {
+      try {
+        let count;
+        return fetch("/api/user-cart", {
+          method: "GET",
+          headers: { token: localStorage.token },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            count = res.count;
+          })
+          .then((res) => {
+            if (!count[0].sum) {
+              dispatch(setCartCount(0));
+            }
+            if (count[0].sum) {
+              dispatch(setCartCount(count[0].sum));
+            }
+          });
+      } catch (err) {
+        console.error(err.message);
+      }
     }
   };
 
   useEffect(() => {
     getOrdered();
-    loadCart();
+    getCart();
   }, []);
 
   return (
@@ -45,7 +79,7 @@ const Ordered = () => {
         <h2>Welcome!</h2>
       )}
       {products && products[0] ? (
-        <p>Your orders:</p>
+        <p>Thank you for your orders:</p>
       ) : (
         <div>
           <p>You don't have any previous orders</p>
@@ -56,7 +90,7 @@ const Ordered = () => {
         ? products.map((product, index) => (
             <div key={index}>
               <p>{product.product_name}</p>
-              <img src={product.img_url} />
+              <img src={product.img_url} alt='' />
               <p>quantity: {product.quantity}</p>
             </div>
           ))

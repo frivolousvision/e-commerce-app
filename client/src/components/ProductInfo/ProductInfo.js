@@ -1,7 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCartCount } from "../../features/cartCountSlice";
-import { setCartFalse, setCartTrue } from "../../features/inCartSlice";
 import "../Products/products.css";
 
 const ProductInfo = ({ match, isAuthenticated }) => {
@@ -28,7 +27,6 @@ const ProductInfo = ({ match, isAuthenticated }) => {
         .then((res) => dispatch(setCartCount(res[0].sum)));
     }
     if (localStorage.token) {
-      dispatch(setCartTrue());
       fetch(`/add-to-cart-user/${id}`, {
         method: "GET",
         headers: { token: localStorage.token },
