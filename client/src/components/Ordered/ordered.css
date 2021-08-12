@@ -7,7 +7,7 @@
   text-align: center;
   width: 80%;
 }
-h2 {
+.ordered-container h2 {
   font-size: 2rem;
 }
 .ordered-container a {
