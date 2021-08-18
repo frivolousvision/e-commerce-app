@@ -38,6 +38,7 @@ app.use("/", require("./routes/cart"));
 
 //Products
 app.use("/", require("./routes/products"));
+
 //Add to cart / remove from cart
 app.use("/", require("./routes/cartActions"));
 
