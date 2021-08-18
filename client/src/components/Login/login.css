@@ -49,3 +49,8 @@ input {
     min-width: 250px;
   }
 }
+@media only screen and (min-width: 800px) {
+  .login-container {
+    margin-top: 15vh;
+  }
+}

@@ -35,6 +35,9 @@ a:hover {
   left: 3vw;
   margin-top: -2.2vh;
 }
+.logo:hover {
+  filter: drop-shadow(0 0 0.5rem grey);
+}
 .mobile-header {
   display: none;
 }
